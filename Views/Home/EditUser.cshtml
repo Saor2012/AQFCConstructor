@@ -1,0 +1,295 @@
+﻿@model IEnumerable<WEBDotNETApp.Models.User>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AQ First Contact Admin Edit User</title>
+    <style>
+        body {
+            /*background: linear-gradient(45deg, #24006b, #f42f8c);*/
+            background: #111;
+            min-height: 100vh;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .lock {
+            cursor: not-allowed;
+        }
+
+        .navigationConteiner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            height: fit-content;
+            background: rgba(255, 255, 255, 0.2);
+            box-sizing: border-box;
+        }
+
+        .navigationConteiner .sign-inBox,
+        .navigationConteiner .sign-outBox,
+        .navigationConteiner .profeli-box {
+            height: 40px;
+            line-height: 40px;
+            float: left;
+            font-size: 2em;
+            padding: 0.3em;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .navigationConteiner .sign-inBox a,
+        .navigationConteiner .sign-outBox a,
+        .navigationConteiner .profeli-box a {
+            color: #00EA00;
+            text-decoration: none;
+            transition: 0.5s;
+        }
+        
+        .navigationConteiner .sign-inBox a:hover,
+        .navigationConteiner .sign-outBox a:hover {
+            color: #000;
+        }
+
+        .navigationConteiner .profeli-box a:hover {
+            color: #336597;
+        }
+
+        .navigationConteiner nav {
+            float: right;
+        }
+
+        .navigationConteiner nav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            font-size: 2em;
+            display: flex;
+        }
+
+        .navigationConteiner nav ul li a {
+            padding: 0.3em;
+            height: 40px;
+            line-height: 40px;
+            text-decoration: none;
+            display: block;
+            color: #fff;
+        }
+
+        .navigationConteiner nav ul li a:hover {
+            background: #aaa;
+        }
+        /* Main section */
+        main {
+            padding-top: 60px;
+        }
+
+        .wrapper {
+            width: 1200px;
+        }
+
+        .user-content {
+            border-radius: 5px;
+            grid-gap: 5px;
+            max-width: 100%;
+            font-size: 1.2rem;
+            border-collapse: collapse;
+            background: #336597;
+        }
+
+        .user-content tr:last-child td {
+            border: none;
+        }
+
+        .user-content th, td {
+            padding: 7px 10px 7px 7px;
+            text-align: left;
+            border-bottom: 1px solid #d3d3d3;
+        }
+
+        .editUser {
+            color: yellow;
+        }
+
+        .deleteUser {
+            color: red;
+        }
+
+        .editUser, .deleteUser {
+            text-decoration: underline;
+        }
+        .invalid-user {
+            color: #FFF;
+            
+        }
+        .edit-user-content {
+            color:#999;
+            padding: 0 10px;
+        }
+
+        .edit-user-content input[type="submit"] {
+            margin-top: 0.83em;
+            padding: 5px 15px;
+            background: #5198FC;
+            color: #fff;
+            position: relative;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header class="navigationConteiner">
+        <nav>
+            <ul>
+
+                <li>
+                    <!--Новини-->
+                    <a href=@Url.Action("Home", "Home")>
+                        Home
+                    </a>
+                </li>
+                @if (Session["UserId"] != null && (long)Session["UserId"] != 0)
+                {
+                    if (Session["MemberShip"] != null && (int)Session["MemberShip"] == 10)
+                    {
+                        <li>
+                            <!--Посилання-->
+                            <a href=@Url.Action("Manage", "Home") title="Web page management">
+                                Manage
+                            </a>
+                        </li>
+                    }
+                    <li>
+                        <!--Констуктор-->
+                        <a href="#">
+                            Constructor
+                        </a>
+                    </li>
+                    <li>
+                        <!--Список предметів-->
+                        <a href=@Url.Action("Items", "Home") title="Items">
+                            Items
+                        </a>
+                    </li>
+                    <li>
+                        <!--Посилання-->
+                        <a href="#">
+                            About
+                        </a>
+                    </li>
+
+                }
+                else
+                {
+                    <li class="lock">
+                        <!--Констуктор-->
+                        <a href="#">
+                            Constructor
+                        </a>
+                    </li>
+                    <li class="lock">
+                        <!--Список предметів-->
+                        <a href="#">
+                            Items
+                        </a>
+                    </li>
+                    <li class="lock">
+                        <!--Посилання-->
+                        <a href="#">
+                            About
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+        @if (Session["UserId"] != null && (long)Session["UserId"] != 0) //
+        {
+            <div class="sign-outBox">
+                <a href="@Url.Action("onExitUser", "Home")">
+                    Sign out
+                </a>
+            </div>
+            <div class="profeli-box">
+                <a href="@Url.Action("Profile", "Home", new { UserId = (long)Session["UserId"] })">
+                    Profile
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="sign-inBox">
+                <a href="@Url.Action("Login", "Home")">
+                    Sign in
+                </a>
+            </div>
+        }
+    </header>
+    <main>
+        @if (Session["UserId"] != null && (long)Session["UserId"] != 0
+            && Session["MemberShip"] != null && (int)Session["MemberShip"] == 10) {
+            <div class="wrapper">
+                <div class="controls">
+
+                </div>
+
+                <div class="edit-user-content">
+                    <form action="~/Home/onUpdateUser" method="POST">
+                        @foreach (var user in Model)
+                        {
+                            <h2> User </h2>
+                            <table class="user-content">
+                                <tr>
+                                    <td><label>User ID: </label></td>
+                                    <td><input type="number" name="edit_id" disabled value="@user.Id" class="hidden"/></td>
+                                    <td><input type="number" name="edit_id2" disabled value="@user.Id" /></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><label>User name: </label></td>
+                                    <td><input type="text" name="edit_firstname" required placeholder="Name" value="@user.name" /></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><label>User surname: </label></td>
+                                    <td><input type="text" name="edit_surname" required placeholder="Surname" value="@user.surname" /></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><label>User login name: </label></td>
+                                    <td><input type="text" name="edit_username" required placeholder="Username" value="@user.loginName" /></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><label>User email: </label></td>
+                                    <td><input type="text" name="edit_email" required placeholder="E-mail" value="@user.email" /></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><label>Enter password for submit: </label></td>
+                                    <td><input type="password" name="edit_password" required placeholder="Password" value="@user.password" /></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><label>Confirm password for submit: </label></td>
+                                    <td><input type="password" name="edit_password2" required placeholder="Retype password" /></td>
+                                </tr>
+                            </table>
+                            <input type="submit" name="edit_submit" value="Update" />
+                        }
+                    </form>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="invalid-user">
+                <h1>Opps... Maybe this webpage doesn't appear to be available</h1>
+            </div>
+        }
+    </main>
+</body>
+</html>

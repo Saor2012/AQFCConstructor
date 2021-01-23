@@ -1,0 +1,336 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AQ First Contact Home</title>
+    <link href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" rel="stylesheet" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    <style>
+        body {
+            /*background: linear-gradient(45deg, #24006b, #f42f8c);*/
+            background: #000;
+            min-height: 100vh;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        .hidden {
+	        display: none;
+        }
+        .lock {
+            cursor: not-allowed;
+        }
+        .navigationConteiner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            height: fit-content;
+            background: rgba(255, 255, 255, 0.2);
+            box-sizing: border-box;
+        }
+
+        .navigationConteiner .sign-inBox,
+        .navigationConteiner .sign-outBox,
+        .navigationConteiner .profeli-box {
+            height: 40px;
+            line-height: 40px;
+            float: left;
+            font-size: 2em;
+            padding: 0.3em;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .navigationConteiner .sign-inBox a,
+        .navigationConteiner .sign-outBox a,
+        .navigationConteiner .profeli-box a {
+            color: #00EA00;
+            text-decoration: none;
+            transition: 0.5s;
+        }
+        
+        .navigationConteiner .sign-inBox a:hover,
+        .navigationConteiner .sign-outBox a:hover {
+            color: #000;
+        }
+
+        .navigationConteiner .profeli-box a:hover {
+            color: #336597;
+        }
+
+        .navigationConteiner nav {
+            float: right;
+        }
+
+        .navigationConteiner nav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            font-size: 2em;
+            display: flex;
+        }
+
+        .navigationConteiner nav ul li a {
+            padding: 0.3em;
+            height: 40px;
+            line-height: 40px;
+            text-decoration: none;
+            display: block;
+            color: #fff;
+        }
+
+        .navigationConteiner nav ul li a:hover {
+            background: #aaa;
+        }
+
+        main {
+            padding-top: 60px;
+        }
+
+        .game-img {
+            background-image: url("https://www.aqfirstcontact.com/images/header-background.jpg");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: local;
+            width: 100%;
+            height: 580px;
+            background-color: #000f18;
+        }
+
+        .game-logo {
+            background-image: url("https://www.aqfirstcontact.com/images/header-logo.png");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            width: 100%;
+            height: 100%;
+        }
+
+        .game-links {
+            width: 100%;
+            height: 70px;
+            color: #fff;
+            font-size: 1.5em;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+            .game-links h5 {
+                display: flex;
+                width: 100%;
+                align-items: center;
+                flex: 0 1 0%;
+                margin: 5px auto;
+            }
+
+                .game-links h5::before,
+                .game-links h5::after {
+                    content: '';
+                    flex-grow: 1;
+                    border-top: 1px solid #232323;
+                }
+
+        .linkBox {
+            padding: 0 15px;
+        }
+        /*						--Sign in--*/
+        /*.sign-inWrapper {
+	        position: absolute;
+	        width: 100%;
+	        height: 100vh;
+	        z-index: 10;
+	        background: rgba(30, 30, 30, 0.4);
+        }
+        .sign-inWrapper .login-form {
+	        position: absolute;
+  	        top: 50%;
+	        left: 50%;
+	        transform:  translate(-50%, -50%);
+  	        width: 600px;
+	        height: 400px;
+	        background: #fff;
+	        border-radius: 2px;
+  	        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+        .sign-inWrapper .login-box, .sign-inWrapper .signup-box {
+	        width: 50%;
+	        height: 400px;
+	        float: left;
+	        position: relative;
+	        box-sizing: border-box;
+	        padding: 30px;
+        }
+        .sign-inWrapper .signup-box {
+	        background: #336597;
+	        height: 440px;
+	        top:-20px;
+	        box-shadow: -20px 0 15px rgba(50, 100, 150, 0.2);
+        }*/
+    </style>
+</head>
+<body>
+    <header class="navigationConteiner">
+        <nav>
+            <ul>
+
+                <li>
+                    <!--Новини-->
+                    <a href=@Url.Action("Home", "Home")>
+                        Home
+                    </a>
+                </li>
+                @if (Session["UserId"] != null && (long)Session["UserId"] != 0)
+                {
+                    if (Session["MemberShip"] != null && (int)Session["MemberShip"] == 10)
+                    {
+                        <li>
+                            <!--Посилання-->
+                            <a href=@Url.Action("Manage", "Home") title="Web page management">
+                                Manage
+                            </a>
+                        </li>
+                    }
+                    <li>
+                        <!--Констуктор-->
+                        <a href="@Url.Action("Constructor", "Home")">
+                            Constructor
+                        </a>
+                    </li>
+                    <li>
+                        <!--Список предметів-->
+                        <a href=@Url.Action("Items", "Home") title="Items">
+                            Items
+                        </a>
+                    </li>
+                    <li>
+                        <!--Посилання-->
+                        <a href="#">
+                            About
+                        </a>
+                    </li>
+
+                }
+                else
+                {
+                    <li class="lock">
+                        <!--Констуктор-->
+                        <a href="#">
+                            Constructor
+                        </a>
+                    </li>
+                    <li class="lock">
+                        <!--Список предметів-->
+                        <a href="#">
+                            Items
+                        </a>
+                    </li>
+                    <li class="lock">
+                        <!--Посилання-->
+                        <a href="#">
+                            About
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+        @if (Session["UserId"] != null && (long)Session["UserId"] != 0) //
+        {
+            <div class="sign-outBox">
+                <a href="@Url.Action("onExitUser", "Home")">
+                    Sign out
+                </a>
+            </div>
+            <div class="profeli-box">
+                <a href="@Url.Action("Profile", "Home", new { UserId = (long)Session["UserId"] })">
+                    Profile
+                </a>
+            </div>
+        } else {
+            <div class="sign-inBox">
+                <a href="@Url.Action("Login", "Home")">
+                    Sign in
+                </a>
+            </div>
+        }
+    </header>
+    <!--<div class="sign-inWrapper hidden">
+        <div class="login-form">
+            <div class="login-box">
+                <form action="" method="POST">
+                    <h1>Sign in</h1>
+
+                    <input type="text" name="login_email" required placeholder="E-mail" />
+                    <input type="password" name="login_password" required placeholder="Password" />
+                    <input type="submit" name="signin_submit" value="Sign in" />
+                </form>
+                <a href="#">Forget password?</a>
+            </div>
+            <div class="signup-box">
+                <form action="" method="POST"></form>
+                <h1>Sign up</h1>
+
+                <input type="text" name="signup_username" required placeholder="Username" />
+                <input type="text" name="signup_email" required placeholder="E-mail" />
+                <input type="password" name="signup_password" required placeholder="Password" />
+                <input type="password" name="signup_password2" required placeholder="Retype password" />
+                <input type="submit" name="signup_submit" value="Sign me up" />
+                </form>
+            </div>
+        </div>
+    </div>-->
+    <main>
+        <div class="game-img">
+            <div class="game-logo"></div>
+        </div>
+        <div class="game-links">
+            <div class="linkBox">
+                <h5>Links</h5>
+                <div>
+                    <a href="https://www.aqfirstcontact.com/" style="padding:15px 30px; background-image: url('https://lh3.googleusercontent.com/RMuAAygnlzn7hH2urjCMl_gL8PGcY5ZyFCkMIzmXK6V7VTEEoy7LElRG6Fm7kDKG6w=s180-rw'); background-size: cover; background-position: center;background-color:#3b5998;text-decoration: none;text-decoration-color:  #ffffff;color: #ffffff;"></a>
+                    <a href="https://www.facebook.com/aqfirstcontact/" class="fab fa-facebook-f fa-2x" style="font-size:1em;padding:15px; width: 30px;background-color:#3b5998;text-decoration: none;text-decoration-color:  #ffffff;color: #ffffff;"></a>
+                    <a href="https://twitter.com/aqfirstcontact" class="fab fa-twitter fa-2x" style="font-size:1em;padding:15px;width: 30px;background-color: #55acee;text-decoration: none;text-decoration-color:  #ffffff;color: #ffffff;"></a>
+                    <a href="https://www.reddit.com/r/aqfirstcontact/" class="fab fa-reddit-alien fa-2x" style="font-size:1em;padding:15px;width: 30px;background-color: #ff5700;text-decoration: none;text-decoration-color:  #ffffff;color: #ffffff;"></a>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        /*function onOpenSigninClick(e) {
+            console.log("Click open signin");
+            let signin = document.querySelector(".sign-inWrapper");
+            if (signin.className.includes("hidden")) {
+                signin.classList.remove("hidden");
+            } else {
+                signin.classList.add("hidden");
+            }
+        }
+
+        function onCloseSigninClick(e) {
+            console.log("Click close signin");
+            console.dir(e);
+            let signin = document.querySelector(".sign-inWrapper");
+            if (e.target === signin) {
+                if (signin.className.includes("hidden")) {
+                    signin.classList.remove("hidden");
+                } else {
+                    signin.classList.add("hidden");
+                }
+            }
+        }
+        document.querySelector(".sign-inBox").addEventListener("click", e => onOpenSigninClick(e));
+        document.querySelector(".sign-inWrapper").addEventListener("click", e => onCloseSigninClick(e));*/
+        document.addEventListener("DOMContentLoaded", function(event) {
+            console.log("DOM fully loaded and parsed");
+            //console.log(Session["UserId"]);
+        });
+    </script>
+</body>
+</html>

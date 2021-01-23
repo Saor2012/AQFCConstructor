@@ -1,0 +1,252 @@
+﻿@{    
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AQ First Contact Login</title>
+    <style>
+        body {
+	        /*background: linear-gradient(45deg, #24006b, #f42f8c);*/
+	        background: #000;
+	        min-height: 100vh;
+	        margin-top: 0;
+	        margin-bottom: 0;
+        }
+        .hidden {
+	        display: none;
+        }
+        .navigationConteiner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            z-index:10;
+            height: fit-content;
+            background: rgba(255, 255, 255, 0.2);
+            box-sizing: border-box;
+        }
+
+        .navigationConteiner .sign-inBox,
+        .navigationConteiner .sign-outBox,
+        .navigationConteiner .profeli-box {
+            height: 40px;
+            line-height: 40px;
+            float: left;
+            font-size: 2em;
+            padding: 0.3em;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .navigationConteiner .sign-inBox a,
+        .navigationConteiner .sign-outBox a,
+        .navigationConteiner .profeli-box a {
+            color: #00EA00;
+            text-decoration: none;
+            transition: 0.5s;
+        }
+        
+        .navigationConteiner .sign-inBox a:hover,
+        .navigationConteiner .sign-outBox a:hover {
+            color: #000;
+        }
+
+        .navigationConteiner .profeli-box a:hover {
+            color: #336597;
+        }
+
+        .navigationConteiner nav {
+            float: right;
+        }
+
+        .navigationConteiner nav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            font-size: 2em;
+            display: flex;
+        }
+
+        .navigationConteiner nav ul li a {
+            padding: 0.3em;
+            height: 40px;
+            line-height: 40px;
+            text-decoration: none;
+            display: block;
+            color: #fff;
+        }
+
+        .navigationConteiner nav ul li a:hover {
+            background: #aaa;
+        }
+        /* Main section */
+        main {
+            padding-top: 60px;
+            position: relative;
+        }
+        /*						--Sign in--*/
+        .sign-inWrapper {
+	        position: absolute;
+	        width: 100%;
+	        height: 100vh;
+	        background: rgba(30, 30, 30, 0.4);
+        }
+        .sign-inWrapper .login-form {
+	        position: absolute;
+  	        top: 50%;
+	        left: 50%;
+	        transform:  translate(-50%, -50%);
+  	        width: 600px;
+	        height: 400px;
+	        background: #fff;
+	        border-radius: 2px;
+  	        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+        .sign-inWrapper .login-box, .sign-inWrapper .signup-box {
+	        width: 50%;
+	        height: 400px;
+	        float: left;
+	        position: relative;
+	        box-sizing: border-box;
+	        padding: 30px;
+        }
+        .sign-inWrapper .signup-box {
+	        background: #336597;
+	        height: 440px;
+	        top:-20px;
+	        box-shadow: -20px 0 15px rgba(50, 100, 150, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <header class="navigationConteiner">
+        <nav>
+            <ul>
+
+                <li>
+                    <!--Новини-->
+                    <a href=@Url.Action("Home", "Home")>
+                        Home
+                    </a>
+                </li>
+                @if (Session["UserId"] != null && (long)Session["UserId"] != 0)
+                {
+                    if (Session["MemberShip"] != null && (int)Session["MemberShip"] == 10)
+                    {
+                        <li>
+                            <!--Посилання-->
+                            <a href=@Url.Action("Manage", "Home") title="Web page management">
+                                Manage
+                            </a>
+                        </li>
+                    }
+                    <li>
+                        <!--Констуктор-->
+                        <a href="#">
+                            Constructor
+                        </a>
+                    </li>
+                    <li>
+                        <!--Список предметів-->
+                        <a href=@Url.Action("Items", "Home") title="Items">
+                            Items
+                        </a>
+                    </li>
+                    <li>
+                        <!--Посилання-->
+                        <a href="#">
+                            About
+                        </a>
+                    </li>
+
+                }
+                else
+                {
+                    <li class="lock">
+                        <!--Констуктор-->
+                        <a href="#">
+                            Constructor
+                        </a>
+                    </li>
+                    <li class="lock">
+                        <!--Список предметів-->
+                        <a href="#">
+                            Items
+                        </a>
+                    </li>
+                    <li class="lock">
+                        <!--Посилання-->
+                        <a href="#">
+                            About
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+        @if (Session["UserId"] != null && (long)Session["UserId"] != 0) //
+        {
+            <div class="sign-outBox">
+                <a href="@Url.Action("onExitUser", "Home")">
+                    Sign out
+                </a>
+            </div>
+            <div class="profeli-box">
+                <a href="@Url.Action("Profile", "Home", new { UserId = (long)Session["UserId"] })">
+                    Profile
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="sign-inBox">
+                <a href="@Url.Action("Login", "Home")">
+                    Sign in
+                </a>
+            </div>
+        }
+    </header>
+    <main>
+        <div class="sign-inWrapper">
+            <div class="login-form">
+                <div class="login-box">
+                    <form action="~/Home/onGetUser" method="POST">
+                        @if (Session["Status_authorization"] != null && (int)Session["Status_authorization"] == 1)
+                        {
+                            <h3>Invalid user login or password, try again</h3>
+                        }
+                        <h1>Sign in</h1>
+
+                        <input type="text" name="login_email" required placeholder="E-mail" />
+                        <input type="password" name="login_password" required placeholder="Password" />
+                        <input type="submit" name="signin_submit" value="Sign in" />
+                    </form>
+                    <a href="#">Forget password?</a>
+                </div>
+                <div class="signup-box">
+                    <form action="~/Home/onAddUser" method="POST">
+                        @if (Session["NewUser"] != null && (int)Session["NewUser"] == 1)
+                        {
+                            <h3>This user already sign up</h3>
+                        }
+                        <h1>Sign up</h1>
+                        <input type="text" name="signup_firstname" required placeholder="Name" />
+                        <input type="text" name="signup_surname" required placeholder="Surname" />
+                        <input type="text" name="signup_username" required placeholder="Username" />
+                        <input type="text" name="signup_email" required placeholder="E-mail" />
+                        <input type="password" name="signup_password" required placeholder="Password" />
+                        <input type="password" name="signup_password2" required placeholder="Retype password" />
+                        <input type="submit" name="signup_submit" value="Sign me up" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+</body>
+</html>

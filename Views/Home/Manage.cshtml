@@ -1,0 +1,259 @@
+﻿
+@model IEnumerable<WEBDotNETApp.Models.User>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AQ First Contact Admin Manage</title>
+    <style>
+        body {
+            /*background: linear-gradient(45deg, #24006b, #f42f8c);*/
+            /*background: #2a1874;*/
+            background: #000;
+            min-height: 100vh;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .lock {
+            cursor: not-allowed;
+        }
+
+        .navigationConteiner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            height: fit-content;
+            background: rgba(255, 255, 255, 0.2);
+            box-sizing: border-box;
+        }
+
+        .navigationConteiner .sign-inBox,
+        .navigationConteiner .sign-outBox,
+        .navigationConteiner .profeli-box {
+            height: 40px;
+            line-height: 40px;
+            float: left;
+            font-size: 2em;
+            padding: 0.3em;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .navigationConteiner .sign-inBox a,
+        .navigationConteiner .sign-outBox a,
+        .navigationConteiner .profeli-box a {
+            color: #00EA00;
+            text-decoration: none;
+            transition: 0.5s;
+        }
+        
+        .navigationConteiner .sign-inBox a:hover,
+        .navigationConteiner .sign-outBox a:hover {
+            color: #000;
+        }
+
+        .navigationConteiner .profeli-box a:hover {
+            color: #336597;
+        }
+
+        .navigationConteiner nav {
+            float: right;
+        }
+
+        .navigationConteiner nav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            font-size: 2em;
+            display: flex;
+        }
+
+        .navigationConteiner nav ul li a {
+            padding: 0.3em;
+            height: 40px;
+            line-height: 40px;
+            text-decoration: none;
+            display: block;
+            color: #fff;
+        }
+
+        .navigationConteiner nav ul li a:hover {
+            background: #aaa;
+        }
+        /* Main section */
+        main {
+            padding-top: 60px;
+            /*background: rgb(27, 55, 83);*/     
+            
+        }
+        .wrapper {
+            width: 1200px;
+        }
+        .user-content {
+            color: white;
+        }
+        .user-content h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .user-content table {
+            width: 100%;
+            font-size: 1.2rem;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding:10pd;
+            text-align: left;
+            border-bottom: 1px solid #d3d3d3;
+        }
+        .editUser { color: yellow; }
+        .deleteUser { color: red; }
+        .editUser, .deleteUser { text-decoration: underline; }
+        .invalid-user {
+            color: #FFF;
+        }
+    </style>
+</head>
+<body>
+    <header class="navigationConteiner">
+        <nav>
+            <ul>
+
+                <li>
+                    <!--Новини-->
+                    <a href=@Url.Action("Home", "Home")>
+                        Home
+                    </a>
+                </li>
+                @if (Session["UserId"] != null && (long)Session["UserId"] != 0)
+                {
+                    if (Session["MemberShip"] != null && (int)Session["MemberShip"] == 10)
+                    {
+                        <li>
+                            <!--Посилання-->
+                            <a href=@Url.Action("Manage", "Home") title="Web page management">
+                                Manage
+                            </a>
+                        </li>
+                    }
+                    <li>
+                        <!--Констуктор-->
+                        <a href="#">
+                            Constructor
+                        </a>
+                    </li>
+                    <li>
+                        <!--Список предметів-->
+                        <a href=@Url.Action("Items", "Home") title="Items">
+                            Items
+                        </a>
+                    </li>
+                    <li>
+                        <!--Посилання-->
+                        <a href="#">
+                            About
+                        </a>
+                    </li>
+
+                }
+                else
+                {
+                    <li class="lock">
+                        <!--Констуктор-->
+                        <a href="#">
+                            Constructor
+                        </a>
+                    </li>
+                    <li class="lock">
+                        <!--Список предметів-->
+                        <a href="#">
+                            Items
+                        </a>
+                    </li>
+                    <li class="lock">
+                        <!--Посилання-->
+                        <a href="#">
+                            About
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+        @if (Session["UserId"] != null && (long)Session["UserId"] != 0) //
+        {
+            <div class="sign-outBox">
+                <a href="@Url.Action("onExitUser", "Home")">
+                    Sign out
+                </a>
+            </div>
+            <div class="profeli-box">
+                <a href="@Url.Action("Profile", "Home", new { UserId = (long)Session["UserId"] })">
+                    Profile
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="sign-inBox">
+                <a href="@Url.Action("Login", "Home")">
+                    Sign in
+                </a>
+            </div>
+        }
+    </header>
+    <main>
+        @if (Session["UserId"] != null && (long)Session["UserId"] != 0 
+            && Session["MemberShip"] != null && (int)Session["MemberShip"] == 10) {
+          <div class="wrapper">
+              <div class="controls">
+
+              </div>
+
+              <div class="user-content">
+                  <h2> Users </h2>
+                  <table>
+                      <thead>
+                        <th>ID</th>
+                        <th>User name</th>
+                        <th>Email</th>
+                        <th colspan="2">Action</th>
+                      </thead>
+                      
+                      <tbody>
+                          @foreach (var user in Model) {
+                          <tr>
+                              <td> @user.Id </td>
+                              <td> @user.surname @user.name </td>
+                              <td> @user.email </td>
+                              <td> <a href=@Url.Action("EditUser", "Home", new { UserId = @user.Id }) class="editUser">edit</a> </td>
+                              @if (@user.MemberShip != 10) {
+                                  <td> <a href=@Url.Action("DeleteUser", "Home", new { UserId = @user.Id }) class="deleteUser">delete</a> </td>
+                              } else {
+                                  <td> Admin </td>
+                              }
+                          </tr>
+                          }
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+        } else {
+            <div class="invalid-user">
+                <h1>Opps... Maybe this webpage doesn't appear to be available</h1>
+            </div>
+        }
+    </main>
+
+
+</body>
+</html>

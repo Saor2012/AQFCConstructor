@@ -1,0 +1,271 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AQ First Contact About Project</title>
+    <link href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" rel="stylesheet" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    <style>
+        body {
+            /*background: linear-gradient(45deg, #24006b, #f42f8c);*/
+            background: #000;
+            min-height: 100vh;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .lock {
+            cursor: not-allowed;
+        }
+
+        .navigationConteiner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            height: fit-content;
+            background: rgba(255, 255, 255, 0.2);
+            box-sizing: border-box;
+        }
+
+        .navigationConteiner .sign-inBox,
+        .navigationConteiner .sign-outBox,
+        .navigationConteiner .profeli-box {
+            height: 40px;
+            line-height: 40px;
+            float: left;
+            font-size: 2em;
+            padding: 0.3em;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .navigationConteiner .sign-inBox a,
+        .navigationConteiner .sign-outBox a,
+        .navigationConteiner .profeli-box a {
+            color: #00EA00;
+            text-decoration: none;
+            transition: 0.5s;
+        }
+        
+        .navigationConteiner .sign-inBox a:hover,
+        .navigationConteiner .sign-outBox a:hover {
+            color: #000;
+        }
+
+        .navigationConteiner .profeli-box a:hover {
+            color: #336597;
+        }
+
+        .navigationConteiner nav {
+            float: right;
+        }
+
+        .navigationConteiner nav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            font-size: 2em;
+            display: flex;
+        }
+
+        .navigationConteiner nav ul li a {
+            padding: 0.3em;
+            height: 40px;
+            line-height: 40px;
+            text-decoration: none;
+            display: block;
+            color: #fff;
+        }
+
+        .navigationConteiner nav ul li a:hover {
+            background: #aaa;
+        }
+        /* Main section */
+        main {
+            padding-top: 60px;
+        }
+
+        .game-img {
+            background-image: url("https://www.aqfirstcontact.com/images/header-background.jpg");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: local;
+            width: 100%;
+            height: 580px;
+            background-color: #000f18;
+        }
+
+        .game-logo {
+            background-image: url("https://www.aqfirstcontact.com/images/header-logo.png");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            width: 100%;
+            height: 100%;
+        }
+
+        .game-links {
+            width: 100%;
+            height: 70px;
+            color: #fff;
+            font-size: 1.5em;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+        .game-links h5 {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            flex: 0 1 0%;
+            margin: 5px auto;
+        }
+
+        .game-links h5::before,
+        .game-links h5::after {
+            content: '';
+            flex-grow: 1;
+            border-top: 1px solid #232323;
+        }
+
+        .linkBox {
+            padding: 0 15px;
+        }
+        /*						--Sign in--*/
+        /*.sign-inWrapper {
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            z-index: 10;
+            background: rgba(30, 30, 30, 0.4);
+        }
+        .sign-inWrapper .login-form {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform:  translate(-50%, -50%);
+            width: 600px;
+            height: 400px;
+            background: #fff;
+            border-radius: 2px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+        .sign-inWrapper .login-box, .sign-inWrapper .signup-box {
+            width: 50%;
+            height: 400px;
+            float: left;
+            position: relative;
+            box-sizing: border-box;
+            padding: 30px;
+        }
+        .sign-inWrapper .signup-box {
+            background: #336597;
+            height: 440px;
+            top:-20px;
+            box-shadow: -20px 0 15px rgba(50, 100, 150, 0.2);
+        }*/
+    </style>
+</head>
+<body>
+    <header class="navigationConteiner">
+        <nav>
+            <ul>
+
+                <li>
+                    <!--Новини-->
+                    <a href=@Url.Action("Home", "Home")>
+                        Home
+                    </a>
+                </li>
+                @if (Session["UserId"] != null && (long)Session["UserId"] != 0)
+                {
+                    if (Session["MemberShip"] != null && (int)Session["MemberShip"] == 10)
+                    {
+                        <li>
+                            <!--Посилання-->
+                            <a href=@Url.Action("Manage", "Home") title="Web page management">
+                                Manage
+                            </a>
+                        </li>
+                    }
+                    <li>
+                        <!--Констуктор-->
+                        <a href="#">
+                            Constructor
+                        </a>
+                    </li>
+                    <li>
+                        <!--Список предметів-->
+                        <a href=@Url.Action("Items", "Home") title="Items">
+                            Items
+                        </a>
+                    </li>
+                    <li>
+                        <!--Посилання-->
+                        <a href="#">
+                            About
+                        </a>
+                    </li>
+
+                }
+                else
+                {
+                    <li class="lock">
+                        <!--Констуктор-->
+                        <a href="#">
+                            Constructor
+                        </a>
+                    </li>
+                    <li class="lock">
+                        <!--Список предметів-->
+                        <a href="#">
+                            Items
+                        </a>
+                    </li>
+                    <li class="lock">
+                        <!--Посилання-->
+                        <a href="#">
+                            About
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+        @if (Session["UserId"] != null && (long)Session["UserId"] != 0) //
+        {
+            <div class="sign-outBox">
+                <a href="@Url.Action("onExitUser", "Home")">
+                    Sign out
+                </a>
+            </div>
+            <div class="profeli-box">
+                <a href="@Url.Action("Profile", "Home", new { UserId = (long)Session["UserId"] })">
+                    Profile
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="sign-inBox">
+                <a href="@Url.Action("Login", "Home")">
+                    Sign in
+                </a>
+            </div>
+        }
+    </header>
+    <main>
+    </main>
+</body>
+</html>

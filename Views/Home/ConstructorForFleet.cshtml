@@ -1,0 +1,366 @@
+﻿@model IEnumerable<WEBDotNETApp.Models.Constructor_model>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ConstructorForFleet</title>
+    <style>
+        body {
+            /*background: linear-gradient(45deg, #24006b, #f42f8c);*/
+            background: #000;
+            min-height: 100vh;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        .hidden {
+	        display: none;
+        }
+        .lock {
+            cursor: not-allowed;
+        }
+        .navigationConteiner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            height: fit-content;
+            background: rgba(255, 255, 255, 0.2);
+            box-sizing: border-box;
+        }
+
+        .navigationConteiner .sign-inBox,
+        .navigationConteiner .sign-outBox,
+        .navigationConteiner .profeli-box {
+            height: 40px;
+            line-height: 40px;
+            float: left;
+            font-size: 2em;
+            padding: 0.3em;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .navigationConteiner nav {
+            float: right;
+        }
+
+        .navigationConteiner nav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            font-size: 2em;
+            display: flex;
+        }
+
+        .navigationConteiner nav ul li a {
+            padding: 0.3em;
+            height: 40px;
+            line-height: 40px;
+            text-decoration: none;
+            display: block;
+            color: #fff;
+        }
+
+        .navigationConteiner nav ul li a:hover {
+            background: #aaa;
+        }
+
+        main {
+            padding-top: 60px;
+        }
+    </style>
+</head>
+<body>
+    <header class="navigationConteiner">
+        <nav>
+            <ul>
+
+                <li>
+                    <!--Новини-->
+                    <a href=@Url.Action("Home", "Home")>
+                        Home
+                    </a>
+                </li>
+                @if (Session["UserId"] != null && (long)Session["UserId"] != 0)
+                {
+                    if (Session["MemberShip"] != null && (int)Session["MemberShip"] == 10)
+                    {
+                        <li>
+                            <!--Посилання-->
+                            <a href=@Url.Action("Manage", "Home") title="Web page management">
+                                Manage
+                            </a>
+                        </li>
+                    }
+                    <li>
+                        <!--Констуктор-->
+                        <a href="@Url.Action("Constructor", "Home")">
+                            Constructor
+                        </a>
+                    </li>
+                    <li>
+                        <!--Список предметів-->
+                        <a href=@Url.Action("Items", "Home") title="Items">
+                            Items
+                        </a>
+                    </li>
+                    <li>
+                        <!--Посилання-->
+                        <a href="#">
+                            About
+                        </a>
+                    </li>
+
+                }
+                else
+                {
+                    <li class="lock">
+                        <!--Констуктор-->
+                        <a href="#">
+                            Constructor
+                        </a>
+                    </li>
+                    <li class="lock">
+                        <!--Список предметів-->
+                        <a href="#">
+                            Items
+                        </a>
+                    </li>
+                    <li class="lock">
+                        <!--Посилання-->
+                        <a href="#">
+                            About
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+        @if (Session["UserId"] != null && (long)Session["UserId"] != 0) //
+        {
+            <div class="sign-outBox">
+                <a href="@Url.Action("onExitUser", "Home")">
+                    Sign out
+                </a>
+            </div>
+            <div class="profeli-box">
+                <a href="@Url.Action("Profile", "Home", new { UserId = (long)Session["UserId"] })">
+                    Profile
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="sign-inBox">
+                <a href="@Url.Action("Login", "Home")">
+                    Sign in
+                </a>
+            </div>
+        }
+    </header>
+    <main>
+        @if (Session["UserId"] != null && (long)Session["UserId"] != 0)
+        {
+            <!--1.Отримуємо дані про флот
+                2.Відображаємо флот з можливістю резагування
+                3.Додати об'єкти для додавання-->
+        <div class="constructor">
+            @foreach (var constructor_Model in Model)
+            {
+                int fleetId = (int)Session["UserFleet"];
+                var userFleet = constructor_Model.fleets.First(x => x.FleetId == fleetId);
+
+                //Буде 3 картки з човнами + їх характеристика (картка з іконкою човна, під нею характеристика, як список)
+                //Знизу буде статистика
+                //лівору та правочур від флоту відповідно weapon та fitting
+
+                <div class="weapons">
+                    <h3>Weapon list</h3>
+                    @foreach (var weapon in constructor_Model.weaponsList) {
+                        var base64 = Convert.ToBase64String(weapon.Icon);
+                        var imgSrc = String.Format("data:image/png;base64,{0}", base64);
+                        <p>
+                            <span>Ability Damage @weapon.AbilityDamage</span>
+                            <span>AbilityRecharge @weapon.AbilityRecharge</span>
+                            <span>ActiveDamage_repair @weapon.ActiveDamage_repair</span>
+                            <span>ActiveRecharge @weapon.ActiveRecharge</span>
+                            <span>AOE @weapon.AOE</span>
+                            <span>Armor @weapon.Armor</span>
+                            <span>CPU @weapon.CPU</span>
+                            <span>DamageType @weapon.DamageType</span>
+                            <span>Energy @weapon.Energy</span>
+                            <span>IsAbilityAttackType @weapon.IsAbilityAttackType</span>
+                            <span>IsActiveAttackType @weapon.IsActiveAttackType</span>
+                            <span>Name @weapon.Name</span>
+                            <span>Penetration @weapon.Penetration</span>
+                            <span>Range @weapon.Range</span>
+                            <span>Rare @weapon.Rare</span>
+                            <span>Speed @weapon.Speed</span>
+                            <span>Target @weapon.Target</span>
+
+                        </p>
+                    }
+                </div>
+                <div class="main_constructor">
+                    <h3>Ship list</h3>
+                    @foreach (var ship in constructor_Model.shipsList)
+                    {
+                        <p>
+                            <span>armor @ship.armor</span>
+                            <span>cells @ship.cells</span>
+                            <span>cpu @ship.cpu</span>
+                            <span>description @ship.description</span>
+                            <span>energy @ship.energy</span>
+                            <span>energyDamage @ship.energyDamage</span>
+                            <span>energyRange @ship.energyRange</span>
+                            <span>energy_sec @ship.energy_sec</span>
+                            <span>explosiveDamage @ship.explosiveDamage</span>
+                            <span>explosiveRange @ship.explosiveRange</span>
+                            <span>fittings @ship.fittings</span>
+                            <span>impactDamage @ship.impactDamage</span>
+                            <span>impactRange @ship.impactRange</span>
+                            <span>name @ship.name</span>
+                            <span>repairStrength @ship.repairStrength</span>
+                            <span>rigging @ship.rigging</span>
+                            <span>shield @ship.shield</span>
+                            <span>shield_sec @ship.shield_sec</span>
+                            <span>shipId @ship.shipId</span>
+                            <span>speed_move @ship.speed_move</span>
+                            <span>speed_turn @ship.speed_turn</span>
+                            <span>tier @ship.tier</span>
+                            <span>weapons @ship.weapons</span>
+                            <span>_class @ship._class</span>
+
+
+                        </p>
+                    }
+                </div>
+                <div class="fittings">
+                    <h3>Fittings list</h3>
+                    @foreach (var fitting in constructor_Model.fittingsList)
+                    {
+                        <p>
+                            <span>Armor @fitting.armor</span>
+                            <span>Attack type @fitting.attackType</span>
+                            <span>CPU @fitting.cpu</span>
+                            <span>Energy @fitting.energy</span>
+                            <span>Name @fitting.name</span>
+                            <span>Range @fitting.range</span>
+                            <span>Rare @fitting.rare</span>
+                            <span>Recharge @fitting.recharge</span>
+                            <span>Repair @fitting.repair_</span>
+                            <span>Shield @fitting.shield</span>
+                            <span>Target @fitting.target</span>
+                        </p>
+                    }
+                </div>
+
+
+                
+                <div class="item">
+                    <div class="card card1">
+                        <div class="cardLockHiddingBtn">
+                            Lock card
+                        </div>
+                        @if (Session["MemberShip"] != null && (int)Session["MemberShip"] == 10)
+                        {
+                            <div class="cardEditBtn">
+                                Edit
+                            </div>
+                        }
+
+                        <!-- Item info -->
+                        <div class="cardContentType">
+                            @if (@weapon.IsActiveAttackType == true && @weapon.IsAbilityAttackType == true)
+                            {
+                                <div class="cardBtn activeState">
+                                    Active
+                                </div>
+                                <div class="cardBtn">
+                                    Ability
+                                </div>
+                            }
+                            else if (@weapon.IsActiveAttackType == true)
+                            {
+                                <div class="cardBtn activeState">
+                                    Active
+                                </div>
+                            }
+                            else if (@weapon.IsAbilityAttackType == true)
+                            {
+                                <div class="cardBtn activeState">
+                                    Ability
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="cardBtn activeState">
+                                    Active
+                                </div>
+                            }
+
+                        </div>
+                        <span class="horisontalLine"></span>
+                        <ul class="cardContent">
+                            <li>
+                                CPU: @weapon.CPU
+                            </li>
+                            <li>
+                                Target: @weapon.Target
+                            </li>
+                            <li>
+                                Range: @weapon.Range
+                            </li>
+                            <li class="cardItemVisible">
+                                @weapon.DamageType damage: @weapon.ActiveDamage_repair
+                            </li>
+                            <li class="cardItemHidden">
+                                @weapon.DamageType damage: @weapon.AbilityDamage
+                            </li>
+                            <li>
+                                Speed: @weapon.Speed
+                            </li>
+                            <li class="cardItemVisible">
+                                Recharge: @weapon.ActiveRecharge
+                            </li>
+                            <li class="cardItemHidden">
+                                Energy: @weapon.Energy
+                            </li>
+                            <li class="cardItemHidden">
+                                Recharge: @weapon.AbilityRecharge
+                            </li>
+                            <li>
+                                Penetration: @weapon.Penetration
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card card2">
+                        <img alt="Item image" src="./images/icons/Screen Shot 04-30-20 at 12.14 AM.PNG">
+                        <div class="cardTitle">
+                            <h2 class="cardTitleName">
+                                @weapon.Name
+                            </h2>
+                            <span class="cardTitleRare">
+                                Rare: <span>@weapon.Rare</span><br>
+                            </span>
+                            <span class="cardTitleType">
+                                Type: Weapon
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        }
+        else
+        {
+            <div class="invalid-user">
+                <h1>Opps... Maybe this webpage doesn't appear to be available</h1>
+            </div>
+        }
+    </main>
+</body>
+</html>

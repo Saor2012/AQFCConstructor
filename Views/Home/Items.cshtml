@@ -1,0 +1,868 @@
+﻿@model IEnumerable<WEBDotNETApp.Models.Weapon>
+
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width" />
+    <title>AQ First Contact Game Items</title>
+    <link href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" rel="stylesheet" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    <style>
+        body {
+	        /*background: linear-gradient(45deg, #24006b, #f42f8c);*/
+	        background: #000;
+	        min-height: 100vh;
+	        margin-top: 0;
+	        margin-bottom: 0;
+        }
+        .hidden {
+	        display: none;
+        }
+        .lock {
+            cursor: not-allowed;
+        }
+        .navigationConteiner {
+	        position: absolute;
+	        top: 0;
+	        left: 0;
+	        width: 100%;
+	        margin: 0;
+	        padding: 0;
+	        height: fit-content;
+	        background: rgba(255, 255, 255, 0.2);
+	        box-sizing: border-box;
+        }
+        .navigationConteiner .sign-inBox,
+        .navigationConteiner .sign-outBox,
+        .navigationConteiner .profeli-box {
+            height: 40px;
+            line-height: 40px;
+            float: left;
+            font-size: 2em;
+            padding: 0.3em;
+            color: #fff;
+            cursor: pointer;
+        }
+        .navigationConteiner .sign-inBox a,
+        .navigationConteiner .sign-outBox a,
+        .navigationConteiner .profeli-box a {
+            color: #00EA00;
+            text-decoration: none;
+            transition: 0.5s;
+        }
+        .navigationConteiner .sign-inBox a:hover,
+        .navigationConteiner .sign-outBox a:hover {
+            color: #000;
+        }
+        .navigationConteiner .profeli-box a:hover {
+            color: #336597;
+        }
+        .navigationConteiner nav {
+	        float: right;
+        }
+        .navigationConteiner nav ul {
+	        margin: 0;
+	        padding: 0;
+	        list-style: none;
+	        font-size: 2em;
+	        display: flex;
+        }
+        .navigationConteiner nav ul li a {
+	        padding: 0.3em;
+	        height: 40px;
+	        line-height: 40px;
+	        text-decoration: none;
+	        display: block;
+	        color: #fff;
+        }
+        .navigationConteiner nav ul li a:hover {
+	        background: #aaa;
+        }
+        /* Main section */
+        main {
+	        padding-top: 60px;
+        }
+        .game-img {
+	        background-image: url("https://www.aqfirstcontact.com/images/header-background.jpg");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: local;
+            width: 100%;
+            height: 580px;
+            background-color: #000f18;
+        }
+        .game-logo {
+	        background-image: url("https://www.aqfirstcontact.com/images/header-logo.png");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            width: 100%;
+            height: 100%;
+        }
+        .game-links {
+	        width: 100%;
+	        height: 70px;
+	        color: #fff;
+	        font-size: 1.5em;
+	        text-align: center;
+	        letter-spacing: 0.5px;
+        }
+        .game-links h5 {
+	        display: flex;
+	        width: 100%;	
+	        align-items: center;
+	        flex: 0 1 0%;
+	        margin: 5px auto;
+        }
+        .game-links h5::before,
+        .game-links h5::after {
+	        content: '';
+	        flex-grow: 1;
+	        border-top: 1px solid #232323;
+        }
+        .linkBox {
+	        padding: 0 15px;
+        }
+        .localItems {
+	        display: none;
+        }
+        .itemsContainer {
+	        margin: 0;
+	        padding: 0;
+	        display: flex;
+	        justify-content: center;
+	        align-items: center;
+        }
+        .items {
+	        width: 1200px;
+	        display: grid;
+	        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+	        grid-gap: 15px;
+	        margin: 0 auto;
+        }
+        .items .item {
+	        position: relative;
+	        width: 240px;
+	        height: 340px;
+	        margin: 0 auto;
+	        background: #fff;
+	        box-shadow: 0 15px 60px rgba(0, 0, 0, 0.5);
+        }
+        .items .item .card {
+	        position: absolute;
+	        bottom: 0;
+	        left: 0;
+	        width: 100%;
+	        height: 100%;
+	        display: flex;
+	        justify-content: center;
+	        align-items: center;
+        }
+        .items .item .card.card1 {
+	        box-sizing: border-box;
+	        padding: 10px;
+	        display: flex;
+	        flex-direction: column;
+	        padding-bottom: 40px;
+	        color:#fff;
+	        background: #111;
+        }
+        .items .item .card.card1 .horisontalLine{
+	        width: 80%;
+	        margin: 0 auto;
+	        height: 3px;
+	        border-radius: 2px;
+	        background: #222;
+        }
+        .items .item .card.card1 .cardItemHidden {
+	        display: none;
+        }
+        .items .item .card.card1 .cardLockHiddingBtn,
+        .items .item .card.card1 .cardEditBtn {
+	        position: absolute;
+	        top: 5px;
+	        width: 15px;
+	        height: 15px;
+	        cursor: pointer;
+	        color: #aaa;
+	        transition: 0.5s;
+        }
+        .items .item .card.card1 .cardLockHiddingBtn {
+            right: 25px;
+        }
+        .items .item .card.card1 .cardEditBtn {
+            padding-top: 10px;
+	        left: 25px;
+        }
+        /*Зелений колір тексту*/
+        .items .item .card.card1 .cardEditBtn, .submitEditCard, .submitAddCard {
+            color: #00EA00;
+        }
+        .items .item .card.card1 .cardLockHiddingBtn:hover {
+	        color: #fff;
+        }
+        .items .item .card.card1 .cardLockHiddingBtn.lock {
+	        color: rgb(27, 55, 83);
+        }
+        .items .item .card.card1 .cardLockHiddingBtn.lock:hover {
+	        color: #336597;
+        }
+        .items .item .card.card1 .cardContentType {
+	        display: flex;
+	        flex-direction: row;
+        }
+        .items .item .card.card1 .cardContentType .cardBtn {
+	        padding: 5px;
+	        font-size: 1em;
+	        color: #aaa;
+	        transition: 0.5s;
+	        cursor: pointer;
+        }
+        .items .item .card.card1 .cardContentType .cardBtn.activeState {
+	        color:#fff;
+        }
+        .items .item .card.card1 .cardContent { 
+	        list-style: none;
+	        list-style-image: url(".//images/Target\ icon.png");
+        }
+        .items .item .card.card1 .cardContent li { 
+	        margin-bottom: 8px;
+	        font-size: 0.8em;
+	        padding: 0;
+        }
+        .items .item .card.card1 h2 {
+	        margin: 0;
+	        padding: 0;
+        }
+        .items .item:hover .card.card2,
+        .items .item .card.card2.lock {
+	        height: 50px;
+        }
+        .items .item .card.card2:before {
+	        content: "";
+	        position: absolute;
+	        top: 0;
+	        left: 0;
+	        width: 40%;
+	        height: 100%;
+	        background:linear-gradient(90deg, rgba(17, 17, 17, 0.7), rgba(27, 55, 83, 0));
+        }
+        .items .item .card.card2:after {
+	        content: "";
+	        position: absolute;
+	        top: 0;
+	        right: 0;
+	        width: 40%;
+	        height: 100%;
+	        background:linear-gradient(-90deg, rgba(17, 17, 17, 0.7), rgba(27, 55, 83, 0));
+        }
+        .items .item .card.card2 {
+	        background: rgb(27, 55, 83);
+	        transition: 0.5s;
+        }
+        .items .item .card.card2 img{
+	        height: 100px;
+	        width: 100px;
+	        margin: 0;
+	        padding: 0;
+	        transition: 0.5s;
+	        z-index: 1;
+        }
+        .items .item .card.card2 .cardTitle {
+	        color:#fff;
+	        z-index: 1;
+        }
+        .items .item .card.card2 .cardTitle .cardTitleRare span{
+	        color: #ccc;
+        }
+        .items .item .card.card2 .cardTitle {
+        	transition: 0.5s;
+        }
+        .items .item .card.card2 .cardTitle h2 {
+        	margin: 0;
+        	padding: 0;
+        	font-size: 1.2em;
+        	text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .items .item:hover .card.card2 .cardTitle,
+        .items .item .card.card2 .cardTitle.lock {
+	        font-size: 0.7em;
+        }
+        .items .item:hover .card.card2 img,
+        .items .item .card.card2 img.lock {
+	        height: 50px;
+	        width: 50px;
+        }
+        .invalid-user {
+            color: #FFF;
+            background: rgb(27, 55, 83);
+        }
+        .editCards, .addCards {
+            display: none;
+            position: relative;
+            margin: 20px 0;
+	        width: 100%;
+            /*height: 200px;*/
+	        background: rgb(27, 55, 83);
+            color: #fff;
+        }
+        .editCards ul, .addCards ul {
+            list-style: none;
+            padding: 10px;
+            margin: 0;
+        }
+        .calncelEditCard, .submitEditCard, 
+        .submitAddCard, .calncelAddCard {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+            cursor: pointer;
+        }
+
+        .calncelEditCard, .calncelAddCard {
+            color: red;
+        }
+        .calncelEditCard a, .submitEditCard a, .calncelAddCard a, .submitAddCard a {
+            text-decoration: none;
+        }
+        .calncelEditCard:hover, .submitEditCard:hover, .calncelAddCard:hover, .submitAddCard:hover {
+            text-decoration: underline;
+        }
+        .calncelEditCard, .calncelAddCard {
+            top: 30px;
+        }
+        .addCard h3 {
+            cursor: pointer;
+        }
+        .addCard h3:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header class="navigationConteiner">
+        <nav>
+            <ul>
+
+                <li>
+                    <!--Новини-->
+                    <a href=@Url.Action("Home", "Home")>
+                        Home
+                    </a>
+                </li>
+                @if (Session["UserId"] != null && (long)Session["UserId"] != 0)
+                {
+                    if (Session["MemberShip"] != null && (int)Session["MemberShip"] == 10)
+                    {
+                        <li>
+                            <!--Посилання-->
+                            <a href=@Url.Action("Manage", "Home") title="Web page management">
+                                Manage
+                            </a>
+                        </li>
+                    }
+                    <li>
+                        <!--Констуктор-->
+                        <a href="@Url.Action("Constructor", "Home")">
+                            Constructor
+                        </a>
+                    </li>
+                    <li>
+                        <!--Список предметів-->
+                        <a href=@Url.Action("Items", "Home") title="Items">
+                            Items
+                        </a>
+                    </li>
+                    <li>
+                        <!--Посилання-->
+                        <a href="#">
+                            About
+                        </a>
+                    </li>
+
+                }
+                else
+                {
+                    <li class="lock">
+                        <!--Констуктор-->
+                        <a href="#">
+                            Constructor
+                        </a>
+                    </li>
+                    <li class="lock">
+                        <!--Список предметів-->
+                        <a href="#">
+                            Items
+                        </a>
+                    </li>
+                    <li class="lock">
+                        <!--Посилання-->
+                        <a href="#">
+                            About
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+        @if (Session["UserId"] != null && (long)Session["UserId"] != 0) //
+        {
+            <div class="sign-outBox">
+                <a href="@Url.Action("onExitUser", "Home")">
+                    Sign out
+                </a>
+            </div>
+            <div class="profeli-box">
+                <a href="@Url.Action("Profile", "Home", new { UserId = (long)Session["UserId"] })">
+                    Profile
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="sign-inBox">
+                <a href="@Url.Action("Login", "Home")">
+                    Sign in
+                </a>
+            </div>
+        }
+    </header>
+    <main>
+        @if (Session["UserId"] != null && (long)Session["UserId"] != 0)
+        {
+            <div class="itemsContainer">
+                @{
+                    int i = 0;
+                }
+                <div class="items">
+                    @foreach (var weapon in Model)
+                    {
+                        i++;
+                        <div class="item">
+                            <div class="card card1">
+                                <div class="cardLockHiddingBtn">
+                                    Lock card
+                                </div>
+                                @if (Session["MemberShip"] != null && (int)Session["MemberShip"] == 10)
+                                {
+                                    <div class="cardEditBtn">
+                                        Edit
+                                    </div>
+                                }
+
+                                <!-- Item info -->
+                                <div class="cardContentType">
+                                    @if (@weapon.IsActiveAttackType == true && @weapon.IsAbilityAttackType == true)
+                                    {
+                                        <div class="cardBtn activeState">
+                                            Active
+                                        </div>
+                                        <div class="cardBtn">
+                                            Ability
+                                        </div>
+                                    }
+                                    else if (@weapon.IsActiveAttackType == true)
+                                    {
+                                        <div class="cardBtn activeState">
+                                            Active
+                                        </div>
+                                    }
+                                    else if (@weapon.IsAbilityAttackType == true)
+                                    {
+                                        <div class="cardBtn activeState">
+                                            Ability
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="cardBtn activeState">
+                                            Active
+                                        </div>
+                                    }
+
+                                </div>
+                                <span class="horisontalLine"></span>
+                                <ul class="cardContent">
+                                    <li>
+                                        CPU: @weapon.CPU
+                                    </li>
+                                    <li>
+                                        Target: @weapon.Target
+                                    </li>
+                                    <li>
+                                        Range: @weapon.Range
+                                    </li>
+                                    <li class="cardItemVisible">
+                                        @weapon.DamageType damage: @weapon.ActiveDamage_repair
+                                    </li>
+                                    <li class="cardItemHidden">
+                                        @weapon.DamageType damage: @weapon.AbilityDamage
+                                    </li>
+                                    <li>
+                                        Speed: @weapon.Speed
+                                    </li>
+                                    <li class="cardItemVisible">
+                                        Recharge: @weapon.ActiveRecharge
+                                    </li>
+                                    <li class="cardItemHidden">
+                                        Energy: @weapon.Energy
+                                    </li>
+                                    <li class="cardItemHidden">
+                                        Recharge: @weapon.AbilityRecharge
+                                    </li>
+                                    <li>
+                                        Penetration: @weapon.Penetration
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card card2">
+                                <img alt="Item image" src="./images/icons/Screen Shot 04-30-20 at 12.14 AM.PNG">
+                                <div class="cardTitle">
+                                    <h2 class="cardTitleName">
+                                        @weapon.Name
+                                    </h2>
+                                    <span class="cardTitleRare">
+                                        Rare: <span>@weapon.Rare</span><br>
+                                    </span>
+                                    <span class="cardTitleType">
+                                        Type: Weapon
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="editCards">
+                @if (Session["NewWeapon"] != null && (int)Session["NewWeapon"] == 1)
+                {
+                    <h3>Success result</h3>
+                }
+                <form id="updateWeapon" action="/Home/onUpdateWeapon" method="post">
+                    <h3>Edit current item</h3>
+                    <ul>
+                        <li>
+                            Weapon name: <input name="item_Name" value="Railgun Mk1">
+                        </li>
+                        <li>
+                            Rare: <input name="item_Rare" value="Normal">
+                        </li>
+                        <li>
+                            Type: <input name="weapon" value="Weapon">
+                        </li>
+                        <li>
+                            CPU: <input name="edit_CPU" value="10">
+                        </li>
+                        <li>
+                            Target: <input name="edit_Target" value="Enemy">
+                        </li>
+                        <li>
+                            Range: <input name="edit_Range" value="70m">
+                        </li>
+                        <li>
+                            Impact damage: <input name="edit_Damage" value="250">
+                        </li>
+                        <li>
+                            Impact damage: <input name="edit_AbilityDamage" value="1800">
+                        </li>
+                        <li>
+                            Speed: <input name="edit_Speed" value="0">
+                        </li>
+                        <li>
+                            Recharge: <input name="edit_Recharge" value="1.7sec">
+                        </li>
+                        <li>
+                            Energy: <input name="edit_Energy" value="500">
+                        </li>
+                        <li>
+                            Recharge: <input name="edit_AbilityRecharge" value="20.8sec">
+                        </li>
+                        <li>
+                            Penetration: <input name="edit_Penetration" value="10%">
+                        </li>
+                        <input type="submit" name="edit_submit" value="Submit" class="submitEditCard">
+                    </ul>
+                </form>
+                <div class="calncelEditCard">Cancel</div>
+
+            </div>
+            <div class="addCards">
+                @if (Session["NewWeapon"] != null && (int)Session["NewWeapon"] == 1)
+                {
+                    <h3>Success result</h3>
+                }
+                <form id="updateWeapon" action="/Home/onAddWeapon" method="post">
+                    <h3>Add new item</h3>
+                    <ul>
+                        <li>
+                            Weapon name: <input name="item_Name" placeholder="Назва зброї Рівеньзброї">
+                        </li>
+                        <li>
+                            Rare: <input name="item_Rare" placeholder="Рідкість">
+                        </li>
+                        <li>
+                            Type: <input name="weapon" placeholder="Тип">
+                        </li>
+                        <li>
+                            CPU: <input name="edit_CPU" placeholder="10-1000">
+                        </li>
+                        <li>
+                            Target: <input name="edit_Target" placeholder="Enemy/Ally/Self">
+                        </li>
+                        <li>
+                            Range: <input name="edit_Range" placeholder="35/55/70/100m">
+                        </li>
+                        <li>
+                            Impact damage: <input name="edit_Damage" placeholder="Звичайна шкода">
+                        </li>
+                        <li>
+                            Impact damage: <input name="edit_AbilityDamage" placeholder="Шкода навичкою">
+                        </li>
+                        <li>
+                            Speed: <input name="edit_Speed" placeholder="Швидкість польоту снаряду">
+                        </li>
+                        <li>
+                            Recharge: <input name="edit_Recharge" placeholder="Наступний постріл (1.7sec)">
+                        </li>
+                        <li>
+                            Energy: <input name="edit_Energy" placeholder="Кількість енергії для навички">
+                        </li>
+                        <li>
+                            Recharge: <input name="edit_AbilityRecharge" placeholder="Наступний постріл навички (20.8sec)">
+                        </li>
+                        <li>
+                            Penetration: <input name="edit_Penetration" placeholder="0/10%">
+                        </li>
+                        <li>
+                            Is ability attack: <input type="checkbox" name="edit_IsAbilityAttackType" placeholder="0/1">
+                        </li>
+                        <li>
+                            Is active attack: <input type="checkbox" name="edit_IsActiveAttackType" placeholder="0/1">
+                        </li>
+                        <input type="submit" name="edit_submit" value="Submit" class="submitAddCard">
+                    </ul>
+                </form>
+                <div class="calncelAddCard">Cancel</div>
+
+            </div>
+        }
+        else
+        {
+            <div class="invalid-user">
+                <h1>Opps... Maybe this webpage doesn't appear to be available</h1>
+            </div>
+        }
+    </main>
+
+    <script>
+        /*<div class="submitEditCard localItems">
+                <a href="Url.Action("onAddweapon", "Home")">
+                    Submit
+                </a>
+            </div>*/
+        var editCardControls = `<div class="calncelEditCard localItems">Cancel</div>`;
+        var weaonpLockItems = ["item_Name", "item_Rare", "weapon"];
+        var weaonpItems = ["edit_CPU", "edit_Target", "edit_Range", "edit_Damage", "edit_AbilityDamage", "edit_Speed","edit_Recharge", "edit_Energy","edit_AbilityRecharge", "edit_Penetration"];
+        function changeItemType(e) {
+	        console.dir(e);
+            //console.dir(e.srcElement.parentElement.children);
+            //let cList = Array.from(e.srcElement.parentElement.children);
+            Array.from(e.srcElement.parentElement.children).forEach(btn => btn.classList.remove("activeState"));
+
+	        e.srcElement.classList.add("activeState");
+            let hiddenItems = e.srcElement.parentElement.parentElement.children[4].children;
+	        //console.dir(hiddenItems);
+	        if (e.srcElement.outerText === "Ability") {
+		        for (let li of hiddenItems) {
+			        if (li.className.includes("cardItemVisible")) {
+				        li.classList.remove("cardItemVisible");
+				        li.classList.add("cardItemHidden");
+			        } else if (li.className.includes("cardItemHidden")) {
+				        li.classList.remove("cardItemHidden");
+				        li.classList.add("cardItemVisible");
+			        }
+		        }
+	        } else if (e.srcElement.outerText === "Active") {
+		        for (let li of hiddenItems) {
+			        if (li.className.includes("cardItemVisible")) {
+				        li.classList.remove("cardItemVisible");
+				        li.classList.add("cardItemHidden");
+			        } else if (li.className.includes("cardItemHidden")) {
+				        li.classList.remove("cardItemHidden");
+				        li.classList.add("cardItemVisible");
+			        }
+		        }
+	        }
+        }
+
+        function lockCardHidding(e) {
+            console.dir(e.srcElement);
+	        if (e.srcElement.className.includes("lock")) {
+		        e.srcElement.classList.remove("lock");
+	        } else {
+		        e.srcElement.classList.add("lock");
+	        }
+	        let hiddenCard = e.srcElement.parentElement.parentElement.children[1];
+	        console.dir(hiddenCard);
+	        if (hiddenCard.className.includes("lock")) {
+		        hiddenCard.classList.remove("lock");
+	        } else {
+		        hiddenCard.classList.add("lock");
+	        }
+	        for (let item of hiddenCard.children) {
+		        if (item.className.includes("lock")) {
+			        item.classList.remove("lock");
+		        } else {
+			        item.classList.add("lock");
+		        }
+	        }
+        }
+
+        function editCard(e) {
+            console.log("Edit")
+            let i = 0;
+            //console.dir(document.querySelector(".editCards"));
+            //if (document.querySelector(".editCards").style.display =="none") {
+            document.querySelector(".editCards").style.display = "block";
+            //}
+            //console.dir(e.srcElement.parentElement.children[4].children);
+            //Спроба 2
+            let nitems = Array.from(document.querySelector("#updateWeapon"))
+            let array = [];
+            Array.from(e.srcElement.parentElement.parentElement.children[1].children[1].children).forEach(item => {
+                if (item.innerText.includes(" Mk")) {
+                    array.push(item.innerText)
+                    //console.log(item.innerText);
+                } else {
+                    array.push(item.innerText.replace(/ /g, "").split(":")[1])
+                    //console.log(item.innerText.replace(/ /g, "").split(":")[1]);
+                }
+            });
+            Array.from(e.srcElement.parentElement.children[4].children).forEach(item => {
+                array.push(item.innerText.replace(/ /g, "").split(":")[1])
+                //console.log(item.innerText.replace(/ /g, "").split(":")[1]);
+            });
+            //console.dir(array)
+            array.forEach(item => {
+                nitems[i].innerText = item;
+                console.log(nitems[i].innerText)
+                i++;
+            });
+            document.querySelector(".calncelEditCard").addEventListener("click", () => clearAdminEditCard());
+            document.querySelector(".submitEditCard").addEventListener("click", () => clearAdminEditCard());
+            //Спроба 1
+            /*console.dir(e.srcElement.parentElement.parentElement.children[1].children[1].children);
+            let updateForm = document.createElement("form");
+            updateForm.action = "/Home/onAddWeapon";
+            updateForm.method = "POST";
+            let wrapper = document.createElement("ul");
+            Array.from(e.srcElement.parentElement.parentElement.children[1].children[1].children).forEach(item => {
+                let newitem = document.createElement("li");
+                let newInput = document.createElement("input");
+                let string = item.innerText.split(": ");
+                if (item.innerText.includes(" Mk")) {
+                    newitem.innerText = "Weapon name: ";
+                    newInput.value = item.innerText;
+                } else {
+                    newitem.innerText = string[0] + ": ";
+                    newInput.value = string[1];
+                }
+                newInput.name = weaonpLockItems[i];
+                console.log(newInput.name);
+                console.log(newInput.value);
+                newInput.disabled = true;
+                newitem.appendChild(newInput);
+                wrapper.appendChild(newitem);
+                i++;
+            });
+            i = 0;
+            Array.from(e.srcElement.parentElement.children[4].children).forEach(item => {
+                let newitem = document.createElement("li"); 
+                let newInput = document.createElement("input");
+                let string = item.innerText.replace(/ /g, "").split(":");
+                newitem.innerText = string[0] + ": ";
+                newInput.value = string[1];
+                newInput.name = weaonpItems[i];
+                console.log(newInput.name);
+                console.log(newInput.value);
+                newitem.appendChild(newInput);
+                wrapper.appendChild(newitem);
+                i++;
+            });
+            let submit = document.createElement('input');
+            submit.type = "submit";
+            submit.name = "edit_submit";
+            submit.value = "Submit";
+            submit.classList.add("submitEditCard");
+            //console.dir(submit);
+            wrapper.appendChild(submit);
+            updateForm.appendChild(wrapper);
+            document.querySelector(".editCards").innerHTML = editCardControls;
+            document.querySelector(".editCards").appendChild(updateForm);
+            //Оновлення оброблювача подій
+            document.querySelector(".calncelEditCard").addEventListener("click", () => clearAdminEditCard());
+            document.querySelector(".submitEditCard").addEventListener("click", () => clearAdminEditCard());
+            //Відображення
+            document.querySelector(".submitEditCard").classList.remove("localItems");
+            document.querySelector(".calncelEditCard").classList.remove("localItems");*/
+
+        }
+        /*function onOpenSigninClick(e) {
+	        console.log("Click open signin");
+	        let signin = document.querySelector(".sign-inWrapper");
+	        if (signin.className.includes("hidden")) {
+		        signin.classList.remove("hidden");
+	        } else {
+		        signin.classList.add("hidden");
+	        }
+        }
+
+        function onCloseSigninClick(e) {
+	        console.log("Click close signin");
+	        console.dir(e);
+	        let signin = document.querySelector(".sign-inWrapper");
+	        if (e.target === signin) {
+		        if (signin.className.includes("hidden")) {
+			        signin.classList.remove("hidden");
+		        } else {
+			        signin.classList.add("hidden");
+		        }
+	        }
+        }*/
+        function onAddWeaponClick(e) {
+            console.log("Click add weapon");
+            document.querySelector(".addCards").style.display = "block";
+
+            document.querySelector(".calncelAddCard").addEventListener("click", () => clearAdminAddCard());
+            document.querySelector(".submitAddCard").addEventListener("click", () => clearAdminAddCard());
+	        
+        }
+        function clearAdminEditCard() {
+            //document.querySelector(".editCards").innerHTML = "";
+            document.querySelector(".editCards").style.display = "none"
+            //document.querySelector(".calncelEditCard").classList.add("localItems");
+            //document.querySelector(".submitEditCard").classList.add("localItems");
+        }
+        function clearAdminAddCard() {
+            document.querySelector(".addCards").style.display = "none";
+        }
+        document.addEventListener("DOMContentLoaded", function(event) {
+            console.log("DOM fully loaded and parsed");
+            document.querySelector(".items").innerHTML += `<div class="item">
+                        <div class="card card1 addCard">
+                            <h3>Add new weapon</h3>
+                        </div>
+                    </div>`;
+            document.querySelector(".addCard h3").addEventListener("click", e => onAddWeaponClick(e));
+            document.querySelectorAll(".items .item .card.card1 .cardContentType .cardBtn").forEach(btn => btn.addEventListener("click", e => changeItemType(e)));
+            document.querySelectorAll(".items .item .card.card1 .cardLockHiddingBtn").forEach(btn => btn.addEventListener("click", e => lockCardHidding(e)));
+            document.querySelectorAll(".items .item .card.card1 .cardEditBtn").forEach(btn => btn.addEventListener("click", e => editCard(e)));
+        });
+        
+        
+        
+    </script>
+</body>
+</html>

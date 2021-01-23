@@ -1,0 +1,1033 @@
+﻿@model IEnumerable<WEBDotNETApp.Models.Constructor_model>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AQ First Contact Game Constructor</title>
+    <style>
+        body {
+            /*background: linear-gradient(45deg, #24006b, #f42f8c);*/
+            background: #000;
+            min-height: 100vh;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .lock {
+            cursor: not-allowed;
+        }
+
+        .navigationConteiner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            z-index: 10;
+            height: fit-content;
+            background: rgba(255, 255, 255, 0.2);
+            box-sizing: border-box;
+        }
+
+        .navigationConteiner .sign-inBox,
+        .navigationConteiner .sign-outBox,
+        .navigationConteiner .profeli-box {
+            height: 40px;
+            line-height: 40px;
+            float: left;
+            font-size: 2em;
+            padding: 0.3em;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .navigationConteiner .sign-inBox a,
+        .navigationConteiner .sign-outBox a,
+        .navigationConteiner .profeli-box a {
+            color: #00EA00;
+            text-decoration: none;
+            transition: 0.5s;
+        }
+
+        .navigationConteiner .sign-inBox a:hover,
+        .navigationConteiner .sign-outBox a:hover {
+            color: #000;
+        }
+
+        .navigationConteiner .profeli-box a:hover {
+            color: #336597;
+        }
+
+        .navigationConteiner nav {
+            float: right;
+        }
+
+        .navigationConteiner nav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            font-size: 2em;
+            display: flex;
+        }
+
+        .navigationConteiner nav ul li a {
+            padding: 0.3em;
+            height: 40px;
+            line-height: 40px;
+            text-decoration: none;
+            display: block;
+            color: #fff;
+        }
+
+        .navigationConteiner nav ul li a:hover {
+            background: #aaa;
+        }
+        /* Main section */
+        main {
+            padding-top: 60px;
+            color: #fff;
+            position: relative;
+        }
+
+        .constructor-items,
+        .constructor {
+            margin: 30px 0;
+            padding: 20px 0;
+            display: flex;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+            background-color: #15221F;
+            position: relative;
+        }
+
+        .constructor {
+            flex-direction: column;
+            height: auto;
+        }
+
+        .constructor-items .weapons,
+        .constructor-items .fittings {
+            flex: 1 1 15%;
+            overflow-x: auto;
+            height: 100%;
+        }
+        
+        .constructor-items .shipList {
+            flex: 1 1 auto;
+            overflow-x: auto;
+            height: 100%;
+        }
+
+        .constructor-items .weapons img,
+        .constructor-items .fittings img{
+            height: 60px;
+        }
+
+        .constructor-items .weapons p,
+        .constructor-items .shipList p,
+        .constructor-items .fittings p {
+            display: none
+        }
+
+        .constructor-items .weapons div,
+        .constructor-items .shipList div,
+        .constructor-items .fittings div {
+            width: fit-content;
+            display: inline-block;
+        }
+
+        .constructor .constructor-ships,
+        .constructor .constructor-ships-items {
+            width: 800px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(240px, 1fr));
+            grid-gap: 15px;
+            margin: 0 auto;
+        }
+
+        .constructor .constructor-ships .shipCard,
+        .constructor .constructor-ships-items .shipItemsCard {
+            position: relative;
+            width: 160px;
+            height: 240px;
+            margin: 0 auto;
+            background: #15221F;
+            border: 2px solid #111;
+            text-align: center;
+            box-shadow: 0 5px 30px rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+        }
+
+        .constructor .constructor-ships-items .shipItemsCard {
+            height: fit-content;
+            padding:10px;
+            display: grid;
+            grid-template-columns: repeat(2, 60px);
+            grid-template-rows: repeat(5, 60px);
+            grid-gap: 15px;
+        }
+
+        .constructor .constructor-ships .shipCard span {
+            position: absolute;
+            z-index: 1;
+            top: 50%;
+            left: 50%;
+            font-size: 3rem;
+            font-weight: bold;
+            transform: translate(-50%, -50%);
+            transition: 0.5s;
+        }
+
+        .constructor .constructor-ships .shipCard:hover span {
+            color: #999;
+        }
+
+        .constructor .constructor-controls,
+        .constructor .constructor-ships,
+        .constructor .constructor-ships-items {
+            margin-bottom: 30px;
+        }
+
+        .shipItem {
+            height: 60px;
+            width: 60px;
+            background: #000;
+        }
+
+        .nextFleetconstructor a, .saveFleet a {
+            color: #000;
+            text-decoration: none;
+        }
+
+        .savefleet_response {
+            height: 20px;
+        }
+
+        .itemsContainer {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 160px;
+            overflow: auto;
+        }
+
+        .items {
+            color: #fff;
+            background-color: #15221F;
+            padding: 10px;
+        }
+
+        .item {
+            position: relative;
+            margin: 5px 0;
+            background-color: #15221F;
+            border: 2px #eee solid;
+            display: flex;
+        }
+
+            .item .listShip {
+                height: 60px;
+                float: left;
+                margin-right: 10px;
+            }
+
+            .item .item-title {
+                max-width: 300px;
+            }
+
+            .item .item-controls {
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                height: 50px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+                .item .item-controls button, .constructor .constructor-controls button {
+                    padding: 5px 15px;
+                    background: #5198FC;
+                    color: #fff;
+                    margin-right: 5px;
+                    position: relative;
+                }
+
+                    .constructor .constructor-controls button a, .constructor .constructor-controls button span {
+                        color: #fff;
+                    }
+
+                    .item .item-controls button::after, .constructor .constructor-controls button:after {
+                        content: "";
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                        width: 30%;
+                        height: 100%;
+                        background: linear-gradient(-90deg, rgba(24, 63, 115, 0.7), rgba(81, 152, 252, 0));
+                    }
+
+                    .item .item-controls button:before, .constructor .constructor-controls button:before {
+                        content: "";
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 30%;
+                        height: 100%;
+                        background: linear-gradient(90deg, rgba(24, 63, 115, 0.7), rgba(81, 152, 252, 0));
+                    }
+
+        .title-details {
+            margin: 0 auto;
+            background: #363636;
+            width: fit-content;
+            padding: 5px 25px;
+            font-size: 1.2rem;
+            text-align: center;
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+            .title-details:after {
+                content: "";
+                position: absolute;
+                z-index: 8;
+                bottom: -38%;
+                left: 0;
+                width: 100%;
+                height: 40%;
+                background: linear-gradient(180deg, rgba(69, 206, 122, 0.7), rgba(21, 34, 31, 0));
+            }
+
+            .title-details:before {
+                content: "";
+                position: absolute;
+                z-index: 8;
+                top: -38%;
+                left: 0;
+                width: 100%;
+                height: 40%;
+                background: linear-gradient(0deg, rgba(69, 206, 122, 0.7), rgba(21, 34, 31, 0));
+            }
+
+        .titleWrapper {
+            position: relative;
+        }
+
+        .stats {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(240px, 1fr));
+            grid-gap: initial;
+            margin: 10px auto;
+            padding: 0 15px;
+        }
+
+        .hLine {
+            width: 100%;
+            height: 3px;
+            background: #000;
+            margin: 10px 0;
+        }
+
+        .full_screen_details {
+            position: absolute;
+            z-index: 8;
+            background: #15221F;
+            width: fit-content;
+            height: fit-content;
+            padding: 15px;
+            margin: auto;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        main .full_screen_details .close_ship_details {
+            display: block;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 0 7px;
+            color: #fff;
+            background: #333;
+            border: 1px solid #eee;
+        }
+
+        .full_screen_details .close_ship_details, .viewItemInfo, .addItem, .constructor .constructor-controls button {
+            cursor: pointer;
+            font-size: 1.0rem;
+        }
+
+        .full_screen_details button {
+            display: none;
+        }
+
+        .items-title {
+            text-align: center;
+        }
+
+        .holding,
+        .constructor-ships .shipCard.holding {
+            border: 2px solid #5198FC;
+        }
+    </style>
+</head>
+<body>
+    <header class="navigationConteiner">
+        <nav>
+            <ul>
+
+                <li>
+                    <!--Новини-->
+                    <a href=@Url.Action("Home", "Home")>
+                        Home
+                    </a>
+                </li>
+                @if (Session["UserId"] != null && (long)Session["UserId"] != 0)
+                {
+                    if (Session["MemberShip"] != null && (int)Session["MemberShip"] == 10)
+                    {
+                        <li>
+                            <!--Посилання-->
+                            <a href=@Url.Action("Manage", "Home") title="Web page management">
+                                Manage
+                            </a>
+                        </li>
+                    }
+                    <li>
+                        <!--Констуктор-->
+                        <a href="#">
+                            Constructor
+                        </a>
+                    </li>
+                    <li>
+                        <!--Список предметів-->
+                        <a href=@Url.Action("Items", "Home") title="Items">
+                            Items
+                        </a>
+                    </li>
+                    <li>
+                        <!--Посилання-->
+                        <a href="#">
+                            About
+                        </a>
+                    </li>
+
+                }
+                else
+                {
+                    <li class="lock">
+                        <!--Констуктор-->
+                        <a href="#">
+                            Constructor
+                        </a>
+                    </li>
+                    <li class="lock">
+                        <!--Список предметів-->
+                        <a href="#">
+                            Items
+                        </a>
+                    </li>
+                    <li class="lock">
+                        <!--Посилання-->
+                        <a href="#">
+                            About
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+        @if (Session["UserId"] != null && (long)Session["UserId"] != 0) //
+        {
+            <div class="sign-outBox">
+                <a href="@Url.Action("onExitUser", "Home")">
+                    Sign out
+                </a>
+            </div>
+            <div class="profeli-box">
+                <a href="@Url.Action("Profile", "Home", new { UserId = (long)Session["UserId"] })">
+                    Profile
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="sign-inBox">
+                <a href="@Url.Action("Login", "Home")">
+                    Sign in
+                </a>
+            </div>
+        }
+    </header>
+    <main>
+        @if (Session["UserId"] != null && (long)Session["UserId"] != 0)
+        {
+            <div class="controls">
+                <div class="controlBtn constructorBtn">Constructor</div>
+                <div class="controlBtn addShipBtn">Add ship</div>
+            </div>
+            <div class="constructor">
+                <div class="constructor-controls">
+                    <button class="removeItem removeItem1" title="Delete ship from card 1">Delete 1</button>
+                    <button class="removeItem removeItem2" title="Delete ship from card 2">Delete 2</button>
+                    <button class="removeItem removeItem3" title="Delete ship from card 3">Delete 3</button>
+                    <button class="saveFleet hidden" title="Save current fleet" form="currentFleet"><a href="@Url.Action("ConstructorForFleet", "Home")">Save fleet and continue</a></button>
+                </div>
+                <div class="constructor-ships">
+                    <div class="shipCard ship1" title="Виберіть човен зі списку">Select ship 1 from list <span>+</span><input class="hidden" name="shipId1" type="number" value="0"></div>
+                    <div class="shipCard ship2" title="Виберіть човен зі списку">Select ship 2 from list <span>+</span><input class="hidden" name="shipId2" type="number" value="0"></div>
+                    <div class="shipCard ship3" title="Виберіть човен зі списку">Select ship 3 from list <span>+</span><input class="hidden" name="shipId3" type="number" value="0"></div>
+                </div>
+                <!--
+                    Додати клас hidden до constructor-ships-items, відображати, коли було додано впринаймні 1 човен, та блокувати певну кількість елементів зброї та обладнення для човну
+                    Додати метод додавання обладнення та блокування інших карток з обладненням та підсвітку, якщо човен не було додано
+                    Додати підсвідку після натискання на порожню картку з якого списку брати елементи
+                    Додати можливість видалити картку за допомогою кнопки (є) та перетягнувши цей елемент за межі
+                    Додати режим відображення статистики флоту
+                    Додати функції з сервером для зберігання флоту та відповідні поля для форми
+                -->
+                <div class="constructor-ships-items">
+                    <div class="shipItemsCard shipItems1" title="Виберіть зброю та обладнення зі списку">
+                        <div class="shipItem weapon1"></div>
+                        <div class="shipItem fitting1"></div>
+                        <div class="shipItem weapon2"></div>
+                        <div class="shipItem fitting2"></div>
+                        <div class="shipItem weapon3"></div>
+                        <div class="shipItem fitting3"></div>
+                        <div class="shipItem weapon4"></div>
+                        <div class="shipItem fitting4"></div>
+                        <div class="shipItem weapon5"></div>
+                        <div class="shipItem fitting5"></div>
+                    </div>
+                    <div class="shipItemsCard shipItems2" title="Виберіть зброю та обладнення зі списку">
+                        <div class="shipItem weapon1"></div>
+                        <div class="shipItem fitting1"></div>
+                        <div class="shipItem weapon2"></div>
+                        <div class="shipItem fitting2"></div>
+                        <div class="shipItem weapon3"></div>
+                        <div class="shipItem fitting3"></div>
+                        <div class="shipItem weapon4"></div>
+                        <div class="shipItem fitting4"></div>
+                        <div class="shipItem weapon5"></div>
+                        <div class="shipItem fitting5"></div>
+                    </div>
+                    <div class="shipItemsCard shipItems3" title="Виберіть зброю та обладнення зі списку">
+                        <div class="shipItem weapon1"></div>
+                        <div class="shipItem fitting1"></div>
+                        <div class="shipItem weapon2"></div>
+                        <div class="shipItem fitting2"></div>
+                        <div class="shipItem weapon3"></div>
+                        <div class="shipItem fitting3"></div>
+                        <div class="shipItem weapon4"></div>
+                        <div class="shipItem fitting4"></div>
+                        <div class="shipItem weapon5"></div>
+                        <div class="shipItem fitting5"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="constructor-items">
+                @foreach (var constructor_Model in Model)
+                {
+                    int fleetId = (int)Session["UserFleet"];
+                    //var userFleet = constructor_Model.fleets.First(x => x.FleetId == fleetId);
+
+                    //Буде 3 картки з човнами + їх характеристика (картка з іконкою човна, під нею характеристика, як список)
+                    //Знизу буде статистика
+                    //лівору та правочур від флоту відповідно weapon та fitting
+
+                    <div class="weapons">
+                        <h3>Weapon list</h3>
+                        @foreach (var weapon in constructor_Model.weaponsList)
+                        {
+                        <div>
+                            @if (weapon.Icon != null)
+                            {
+                            var base64 = Convert.ToBase64String(weapon.Icon);
+                            var imgSrc = String.Format("data:image/png;base64,{0}", base64);
+                            var imgTitle = @weapon.Name + " " + @weapon.Rare;
+                            <img alt="Weapon image" src="@imgSrc" class="weaponList" draggable="true" title="@imgTitle">
+                            <p>
+                                <span>Ability Damage @weapon.AbilityDamage</span>
+                                <span>AbilityRecharge @weapon.AbilityRecharge</span>
+                                <span>ActiveDamage_repair @weapon.ActiveDamage_repair</span>
+                                <span>ActiveRecharge @weapon.ActiveRecharge</span>
+                                <span>AOE @weapon.AOE</span>
+                                <span>Armor @weapon.Armor</span>
+                                <span>CPU @weapon.CPU</span>
+                                <span>DamageType @weapon.DamageType</span>
+                                <span>Energy @weapon.Energy</span>
+                                <span>IsAbilityAttackType @weapon.IsAbilityAttackType</span>
+                                <span>IsActiveAttackType @weapon.IsActiveAttackType</span>
+                                <span>Name @weapon.Name</span>
+                                <span>Penetration @weapon.Penetration</span>
+                                <span>Range @weapon.Range</span>
+                                <span>Rare @weapon.Rare</span>
+                                <span>Speed @weapon.Speed</span>
+                                <span>Target @weapon.Target</span>
+
+                            </p>
+                            }
+                            else
+                            {
+                            <p>
+                                <span>Ability Damage @weapon.AbilityDamage</span>
+                                <span>AbilityRecharge @weapon.AbilityRecharge</span>
+                                <span>ActiveDamage_repair @weapon.ActiveDamage_repair</span>
+                                <span>ActiveRecharge @weapon.ActiveRecharge</span>
+                                <span>AOE @weapon.AOE</span>
+                                <span>Armor @weapon.Armor</span>
+                                <span>CPU @weapon.CPU</span>
+                                <span>DamageType @weapon.DamageType</span>
+                                <span>Energy @weapon.Energy</span>
+                                <span>IsAbilityAttackType @weapon.IsAbilityAttackType</span>
+                                <span>IsActiveAttackType @weapon.IsActiveAttackType</span>
+                                <span>Name @weapon.Name</span>
+                                <span>Penetration @weapon.Penetration</span>
+                                <span>Range @weapon.Range</span>
+                                <span>Rare @weapon.Rare</span>
+                                <span>Speed @weapon.Speed</span>
+                                <span>Target @weapon.Target</span>
+
+                            </p>
+                            }
+                        </div>
+                        }
+                    </div>
+                    <div class="shipList">
+                        <h3>Ship list</h3>
+                        @foreach (var ship in constructor_Model.shipsList)
+                        {
+                            <div>
+                            @if (ship.iconH != null && ship.iconV != null)
+                            {
+                                var hbase64 = Convert.ToBase64String(ship.iconH);
+                                var imgHSrc = String.Format("data:image/png;base64,{0}", hbase64);
+                                var vbase64 = Convert.ToBase64String(ship.iconV);
+                                var imgVSrc = String.Format("data:image/png;base64,{0}", vbase64);
+                                var imgTitle = @ship.name + " " + @ship._class;
+                                <img alt="Ship horizontal image" src="@imgHSrc" class="shipHList hImg" title="@imgTitle">
+                                <img alt="Ship vertical image" src="@imgVSrc" class="shipVList vImg" draggable="true" title="@imgTitle">
+                                <p>
+                                    <span class="hidden">@ship.shipId</span>
+                                    <span>armor @ship.armor</span>
+                                    <span>cells @ship.cells</span>
+                                    <span>cpu @ship.cpu</span>
+                                    <span>description @ship.description</span>
+                                    <span>energy @ship.energy</span>
+                                    <span>energyDamage @ship.energyDamage</span>
+                                    <span>energyRange @ship.energyRange</span>
+                                    <span>energy_sec @ship.energy_sec</span>
+                                    <span>explosiveDamage @ship.explosiveDamage</span>
+                                    <span>explosiveRange @ship.explosiveRange</span>
+                                    <span>fittings @ship.fittings</span>
+                                    <span>impactDamage @ship.impactDamage</span>
+                                    <span>impactRange @ship.impactRange</span>
+                                    <span>name @ship.name</span>
+                                    <span>repairStrength @ship.repairStrength</span>
+                                    <span>rigging @ship.rigging</span>
+                                    <span>shield @ship.shield</span>
+                                    <span>shield_sec @ship.shield_sec</span>
+                                    <span>shipId @ship.shipId</span>
+                                    <span>speed_move @ship.speed_move</span>
+                                    <span>speed_turn @ship.speed_turn</span>
+                                    <span>tier @ship.tier</span>
+                                    <span>weapons @ship.weapons</span>
+                                    <span>_class @ship._class</span>
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    <span>armor @ship.armor</span>
+                                    <span>cells @ship.cells</span>
+                                    <span>cpu @ship.cpu</span>
+                                    <span>description @ship.description</span>
+                                    <span>energy @ship.energy</span>
+                                    <span>energyDamage @ship.energyDamage</span>
+                                    <span>energyRange @ship.energyRange</span>
+                                    <span>energy_sec @ship.energy_sec</span>
+                                    <span>explosiveDamage @ship.explosiveDamage</span>
+                                    <span>explosiveRange @ship.explosiveRange</span>
+                                    <span>fittings @ship.fittings</span>
+                                    <span>impactDamage @ship.impactDamage</span>
+                                    <span>impactRange @ship.impactRange</span>
+                                    <span>name @ship.name</span>
+                                    <span>repairStrength @ship.repairStrength</span>
+                                    <span>rigging @ship.rigging</span>
+                                    <span>shield @ship.shield</span>
+                                    <span>shield_sec @ship.shield_sec</span>
+                                    <span>shipId @ship.shipId</span>
+                                    <span>speed_move @ship.speed_move</span>
+                                    <span>speed_turn @ship.speed_turn</span>
+                                    <span>tier @ship.tier</span>
+                                    <span>weapons @ship.weapons</span>
+                                    <span>_class @ship._class</span>
+
+
+                                </p>
+                            }
+                            </div>
+                        }
+                    </div>
+                    <div class="fittings">
+                        <h3>Fittings list</h3>
+                        @foreach (var fitting in constructor_Model.fittingsList)
+                        {
+                            <div>
+                            @if (fitting.icon != null)
+                            {
+                                var base64 = Convert.ToBase64String(fitting.icon);
+                                var imgSrc = String.Format("data:image/png;base64,{0}", base64);
+                                var imgTitle = @fitting.name + " " + @fitting.rare;
+                                <img alt="Fitting image" src="@imgSrc" class="fittingList" draggable="true" title="@imgTitle">
+                                <p>
+                                    <span>Armor @fitting.armor</span>
+                                    <span>Shield @fitting.shield</span>
+                                    @if (@fitting.attackType != null)
+                                    {
+                                        <span>Attack type @fitting.attackType</span>
+                                    }
+                                    <span>Ability type @fitting.isAbilityType</span>
+                                    <span>Active type @fitting.isActiveType</span>
+                                    <span>Passive type @fitting.isPassiveType</span>
+                                    <span>CPU @fitting.cpu</span>
+                                    <span>Energy @fitting.energy</span>
+                                    <span>Name @fitting.name</span>
+                                    <span>Range @fitting.range</span>
+                                    <span>Rare @fitting.rare</span>
+                                    <span>Recharge @fitting.recharge</span>
+                                    <span>Repair or damage @fitting.repairDamage</span>
+                                    <span>Ability recharge @fitting.abilityRecharge</span>
+                                    <span>Target @fitting.target</span>
+                                </p>
+                            }
+                            else
+                            {
+                                <p>
+                                    <span>Armor @fitting.armor</span>
+                                    <span>Shield @fitting.shield</span>
+                                    @if (@fitting.attackType != null)
+                                    {
+                                        <span>Attack type @fitting.attackType</span>
+                                    }
+                                    <span>Ability type @fitting.isAbilityType</span>
+                                    <span>Active type @fitting.isActiveType</span>
+                                    <span>Passive type @fitting.isPassiveType</span>
+                                    <span>CPU @fitting.cpu</span>
+                                    <span>Energy @fitting.energy</span>
+                                    <span>Name @fitting.name</span>
+                                    <span>Range @fitting.range</span>
+                                    <span>Rare @fitting.rare</span>
+                                    <span>Recharge @fitting.recharge</span>
+                                    <span>Repair or damage @fitting.repairDamage</span>
+                                    <span>Ability recharge @fitting.abilityRecharge</span>
+                                    <span>Target @fitting.target</span>
+                                </p>
+                            }
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+            <script>
+                const shipCards = document.querySelectorAll(".shipCard");
+                const weaponList = document.querySelectorAll(".weaponList");
+                const shipList = document.querySelectorAll(".shipVList");
+                const fittingList = document.querySelectorAll(".fittingList");
+                let currentCard, inputCard;
+
+                function onDeleteShip(e) {
+                    //console.log("Click delete ship from fleet");
+                    console.dir(e.srcElement)
+                    if (e.srcElement.classList.contains("removeItem1")) {
+                        //console.dir(e.srcElement.parentElement.parentElement)
+                        document.querySelector(".constructor .ship1").innerHTML = `Select ship 1 from list <span>+</span><input class="hidden" name="shipId1" type="number" value="0">`;
+                    } else if (e.srcElement.classList.contains("removeItem2")) {
+                        //console.dir(e.srcElement.parentElement.parentElement)
+                        document.querySelector(".constructor .ship2").innerHTML = `Select ship 2 from list <span>+</span><input class="hidden" name="shipId1" type="number" value="0">`;
+                    } else if (e.srcElement.classList.contains("removeItem3")) {
+                        //console.dir(e.srcElement.parentElement.parentElement)
+                        document.querySelector(".constructor .ship3").innerHTML = `Select ship 3 from list <span>+</span><input class="hidden" name="shipId1" type="number" value="0">`;
+                    }
+                    //console.log(document.querySelector(".constructor .ship1 img") == null);
+                    //console.log(document.querySelector(".constructor .ship2 img") == null);
+                    //console.log(document.querySelector(".constructor .ship3 img") == null);
+                    if (document.querySelector(".constructor .ship1 img") == null && document.querySelector(".constructor .ship2 img") == null && document.querySelector(".constructor .ship3 img") == null) {
+                        document.querySelector(".savefleet_response").innerHTML = "";
+                        document.querySelector(".saveFleet").classList.add("hidden");
+                    }
+                }
+                function onAddShip(e) {
+                    //console.log("Click add ship to fleet");
+                    //console.dir(e.srcElement.parentElement.className);
+                    //console.log(e.srcElement.className == "addItem addItem1", e.srcElement.className == "addItem addItem2", e.srcElement.className == "addItem addItem3");
+                    if (e.srcElement.className == "addItem addItem1") {
+                        //console.dir(e.srcElement.parentElement.parentElement.children[5])
+                        let image = e.srcElement.parentElement.parentElement.children[1].outerHTML;
+                        let shipCode = document.createElement("input");
+                        console.log("Step 1");
+                        shipCode.classList.add("hidden");
+                        shipCode.name = "shipId1";
+                        shipCode.type = "number";
+                        //console.log("Step 2");
+                        document.querySelector(".constructor .ship1").innerHTML = image + shipCode.outerHTML;
+                        //console.log("Step 3");
+                        document.querySelector(".constructor .ship1 input").value = e.srcElement.parentElement.parentElement.children[5].innerText;
+                        document.querySelector(".constructor .ship1 img").classList.remove("hidden");
+                        //console.log(document.querySelector(".constructor .ship1"));
+                    } else if (e.srcElement.className == "addItem addItem2") {
+                        //console.dir(e.srcElement.parentElement.parentElement)
+                        let image = e.srcElement.parentElement.parentElement.children[1].outerHTML;
+                        let shipCode = document.createElement("input");
+                        //console.log("Step 1");
+                        shipCode.classList.add("hidden");
+                        shipCode.name = "shipId2";
+                        shipCode.type = "number";
+                        //console.log("Step 2");
+                        document.querySelector(".constructor .ship2").innerHTML = image + shipCode.outerHTML;
+                        //console.log("Step 3");
+                        document.querySelector(".constructor .ship2 input").value = e.srcElement.parentElement.parentElement.children[5].innerText;
+                        document.querySelector(".constructor .ship2 img").classList.remove("hidden");
+                        //console.log(document.querySelector(".constructor .ship2"));
+                    } else if (e.srcElement.className == "addItem addItem3") {
+                        //console.dir(e.srcElement.parentElement.parentElement)
+                        let image = e.srcElement.parentElement.parentElement.children[1].outerHTML;
+                        let shipCode = document.createElement("input");
+                        //console.log("Step 1");
+                        shipCode.classList.add("hidden");
+                        shipCode.name = "shipId3";
+                        shipCode.type = "number";
+                        //console.log("Step 2");
+                        document.querySelector(".constructor .ship3").innerHTML = image + shipCode.outerHTML;
+                        //console.log("Step 3");
+                        document.querySelector(".constructor .ship3 input").value = e.srcElement.parentElement.parentElement.children[5].innerText;
+                        document.querySelector(".constructor .ship3 img").classList.remove("hidden");
+                        //console.log(document.querySelector(".constructor .ship3"));
+                    }
+                    document.querySelector(".savefleet_response").innerHTML = `Щоб продовжити редагування флоту натисніть на "Save fleet and continue"`;
+                    if (document.querySelector(".saveFleet").classList.contains("hidden")) {
+                        document.querySelector(".saveFleet").classList.remove("hidden");
+                    }
+                }
+                function onGetShipDetails(e) {
+                    if (document.querySelector("main .full_screen_details") != null) {
+                        document.querySelector("main .full_screen_details").remove();
+                    }
+                    //console.log("Click view ship details");
+                    //console.dir(e.srcElement)
+                    //console.dir(e.srcElement.parentElement.parentElement)
+                    //console.dir(e.srcElement.parentElement.parentElement.children[3])
+                    let itemsList = Array.from(e.srcElement.parentElement.parentElement.children[3].children); //12+
+                    //console.dir(itemsList);
+                    let wrapper = document.createElement("div");
+                    wrapper.classList.add("full_screen_details");
+                    /*<div class="title-details">
+                        <div class="titleWrapper">
+                            <span class="ship-title">ship._class ship.tier</span> <br />
+                            <span class="ship-name">ship.name</span>
+                        </div>
+                    </div>*/
+                    let section1 = document.createElement("div");
+                    section1.classList.add("title-details");
+                    let ship_title = document.createElement("span");
+                    ship_title.classList.add("ship-title");
+                    let ship_name = document.createElement("span");
+                    ship_name.classList.add("ship-name");
+                    ship_title.innerText = itemsList[0].innerText;
+                    ship_name.innerText = itemsList[1].innerText;
+                    section1.innerHTML = ship_title.outerHTML + `<br/>` + ship_name.outerHTML;
+                    //console.log(section1); //Готово
+                    /*<div class="hLine"></div>
+                    <div>
+                        <span class="ship-description">ship.description</span>
+                    </div>
+                    <div class="hLine"></div>*/
+                    let horizontal_line = document.createElement("div");
+                    let horizontal_line2 = document.createElement("div");
+                    let horizontal_line3 = document.createElement("div");
+                    horizontal_line.classList.add("hLine");
+                    horizontal_line2.classList.add("hLine");
+                    horizontal_line3.classList.add("hLine");
+                    let section2 = document.createElement("div");
+                    let ship_description = document.createElement("span");
+                    ship_description.classList.add("ship-description");
+                    let description = itemsList[2].innerText;
+                    ship_description.innerText = description;
+                    section2.innerHTML = ship_description.outerHTML;
+                    //console.log(section2); //Готово
+                    /*<div class="stats">
+                        <span class="ship-shield">Shield: ship.shield</span>
+                        <span class="ship-shield_sec">Shield/Sec: ship.shield_sec</span>
+
+                        <span class="ship-armor">Armor: ship.armor</span>
+                        <span class="ship-weapons">Weapons: ship.weapons</span>
+                        <span class="ship-fittings">Fittings: ship.fittings</span>
+                        <span class="ship-rigging">Rigging: ship.rigging</span>
+                        <span class="ship-cells">Cells: ship.cells</span>
+                        <span class="ship-cpu">CPU: ship.cpu</span>
+                        <span class="ship-energy">Energy: ship.energy</span>
+                        <span class="ship-energy_sec">Energy/Sec: ship.energy_sec</span>
+                        <span class="ship-move">Speed/Move: ship.speed_move</span>
+                        <span class="ship-turn">Speed/Turn: ship.speed_turn</span>
+                        if (ship.energyRange.Length > 1)
+                        {
+                            <span class="ship-energy_range">Energy Range: ship.energyRange</span>
+                        }
+                        if (ship.impactRange.Length > 1)
+                        {
+                            <span class="ship-impact_range">Impact Range: ship.impactRange</span>
+                        }
+                        if (ship.explosiveRange.Length > 1)
+                        {
+                            <span class="ship-explosive_range">Explosive Range: ship.explosiveRange</span>
+                        }
+                        if (ship.energyDamage.Length > 1)
+                        {
+                            <span class="ship-energy_damage">Energy Damage: ship.energyDamage</span>
+                        }
+                        if (ship.impactDamage.Length > 1)
+                        {
+                            <span class="ship-impact_damage">Impact Damage: ship.impactDamage</span>
+                        }
+                        if (ship.explosiveDamage.Length > 1)
+                        {
+                            <span class="ship-explosive_damage">Explosive Damage: ship.explosiveDamage</span>
+                        }
+                        if (ship.repairStrength.Length > 1)
+                        {
+                            <span class="ship-repair_stength">Repair Strength: ship.repairStrength</span>
+                        }
+                    </div>*/
+                    let section3 = document.createElement("div");
+                    section3.classList.add("stats");
+                    for (let i = 3; i < itemsList.length; i++) {
+                        let tItem = document.createElement("span");
+                        let content = itemsList[i].innerText;
+                        tItem.className = itemsList[i].className;
+                        tItem.innerText = content;
+                        //console.log(tItem);
+                        section3.appendChild(tItem);
+                    }
+                    console.log(section3); //Готово
+                    //Кнопка виходу
+                    let exitBtn = `<div class="close_ship_details">x<div>`
+                    wrapper.appendChild(section1);
+                    wrapper.appendChild(horizontal_line);
+                    wrapper.appendChild(section2);
+                    wrapper.appendChild(horizontal_line2);
+                    wrapper.appendChild(section3);
+                    wrapper.appendChild(horizontal_line3);
+                    wrapper.innerHTML += exitBtn;
+                    document.querySelector("main").appendChild(wrapper);
+                    setTimeout(() => {
+                        document.querySelector("main .full_screen_details .close_ship_details").addEventListener("click", (e) => {
+                            if (document.querySelector("main .full_screen_details") != null) {
+                                document.querySelector("main .full_screen_details").remove();
+                            }
+                        });
+                    }, 500);
+                }
+
+                function dragItem(e) {
+                    //Наш об'єкт, взяли
+                    console.log("Item selected");
+                    //console.dir(e.srcElement);
+                    currentCard = document.createElement("img");
+                    currentCard.className = e.srcElement.className;
+                    currentCard.src = e.srcElement.src;
+                    currentCard.title = e.srcElement.title;
+                    currentCard.alt = e.srcElement.alt;
+                    e.srcElement.className += " holding";
+                    if (e.srcElement.classList.contains("shipVList")) {
+                        shipCards.forEach(card => card.className += " holding");
+                        inputCard = e.srcElement.parentElement.children[2].children[0].innerText;
+                    }
+                }
+                function dropItem(e) {
+                    console.log("item droped");
+                    //console.dir(e.srcElement);
+                    currentCard = e.srcElement;
+                    e.srcElement.classList.remove("holding");
+                    if (e.srcElement.classList.contains("shipVList")) {
+                        shipCards.forEach(card => card.classList.remove("holding"));
+                    }
+                }
+                //Оброблювачі події з порожніми картками
+                function dragEnterItem(e) {
+                    //Було наведення на картку з елементом
+                    e.preventDefault();
+                }
+                function dragLeaveItem(e) {
+                    console.log("item leave");
+                }
+                function dragOverItem(e) {
+                    e.preventDefault();
+                }
+                function dragDropItem(e) {
+                    //Місце куди було вставлено елемент
+                    console.log("drop item");
+                    //console.dir(e.srcElement);
+                    console.log("Current box");
+                    console.dir(currentCard);
+                    //console.log(currentCard);
+                    //Додавання елементів та опису
+                    console.log(inputCard);
+                    if (e.srcElement.classList.contains("shipCard") && (e.srcElement.classList.contains("ship1") || e.srcElement.classList.contains("ship2") ||
+                        e.srcElement.classList.contains("ship3"))) {
+                        console.log("card item");
+                        let input = e.srcElement.children[1];
+                        e.srcElement.innerHTML = "";
+                        e.srcElement.append(currentCard);
+                        input.value = inputCard;
+                        e.srcElement.appendChild(input);
+                    } else {
+                        if (e.srcElement.parentElement.classList.contains("shipCard") && (e.srcElement.parentElement.classList.contains("ship1") ||
+                            e.srcElement.parentElement.classList.contains("ship2") || e.srcElement.parentElement.classList.contains("ship3"))) {
+                            console.log("card item");
+                            let input = e.srcElement.parentElement.children[1];
+                            e.srcElement.parentElement.innerHTML = "";
+                            e.srcElement.parentElement.append(currentCard);
+                            input.value = inputCard;
+                            e.srcElement.parentElement.appendChild(input);
+                        } 
+                    }
+                }
+
+                document.querySelectorAll(".item-controls .addItem").forEach(btn => btn.addEventListener("click", e => onAddShip(e)));
+                document.querySelectorAll(".item-controls .viewItemInfo").forEach(btn => btn.addEventListener("click", e => onGetShipDetails(e)));
+                document.querySelectorAll(".constructor-controls .removeItem").forEach(btn => btn.addEventListener("click", e => onDeleteShip(e)));
+
+                weaponList.forEach(weapon => weapon.addEventListener("dragstart", (e) => dragItem(e)));
+                weaponList.forEach(weapon => weapon.addEventListener("dragend", (e) => dropItem(e)));
+                shipList.forEach(ship => ship.addEventListener("dragstart", (e) => dragItem(e)));
+                shipList.forEach(ship => ship.addEventListener("dragend", (e) => dropItem(e)));
+                fittingList.forEach(fitting => fitting.addEventListener("dragstart", (e) => dragItem(e)));
+                fittingList.forEach(fitting => fitting.addEventListener("dragend", (e) => dropItem(e)));
+                shipCards.forEach(shipCard => shipCard.addEventListener("dragover", (e) => dragOverItem(e)));
+                shipCards.forEach(shipCard => shipCard.addEventListener("dragenter", (e) => dragEnterItem(e)));
+                shipCards.forEach(shipCard => shipCard.addEventListener("dragleave", (e) => dragLeaveItem(e)));
+                shipCards.forEach(shipCard => shipCard.addEventListener("drop", (e) => dragDropItem(e)));
+            </script>
+        }
+        else
+        {
+            <div class="invalid-user">
+                <h1>Opps... Maybe this webpage doesn't appear to be available</h1>
+            </div>
+        }
+    </main>
+</body>
+</html>
